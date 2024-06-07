@@ -28,7 +28,7 @@
 .input-common .ant-input-number,
 .input-common .ant-picker.ant-picker-middle.input-date-common,
 .input-common .ant-input-affix-wrapper {
-  border-radius: 8px !important;
+  border-radius: 4px !important;
   height: 36px;
 }
 

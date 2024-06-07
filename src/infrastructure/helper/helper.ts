@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import moment from "moment";
-
+import Constants from "../../core/common/constants";
+const baseURL = process.env.REACT_APP_BASE_URL
 export const validateFields = (isImplicitChange = false, key: any, isCheck: any, setError: Function, error: any, message: string) => {
     if (isImplicitChange) {
         error[key] = {
@@ -18,10 +19,12 @@ export const validateFields = (isImplicitChange = false, key: any, isCheck: any,
         });
     }
 };
-export const reentryAllowedConfig = (reentryAllowed: boolean) => {
-    if (reentryAllowed) {
-        return "Được phép"
+
+export const configImageURL = (img: string) => {
+    if (img) {
+        return `${baseURL}/preview/${img}`
     }
+    return ""
 }
 
 export const convertStringToBoolean = (value: string) => {
@@ -70,4 +73,12 @@ export const formatCurrencyVND = (amount: string) => {
     // Định dạng số với phân cách hàng nghìn
     let formattedAmount = amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     return `${formattedAmount} ₫`;
+}
+export const configGender = (gender: String) => {
+    if (gender == Constants.Gender.MALE.value) {
+        return Constants.Gender.MALE.position
+    }
+    else if (gender == Constants.Gender.FEMALE.value) {
+        return Constants.Gender.FEMALE.position
+    }
 }

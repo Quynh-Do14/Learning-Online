@@ -2,17 +2,16 @@ export class Endpoint {
     static Auth = class {
         static Login = "/auth/login"
         static Register = "/auth/signup"
-        static Profile = "/auth/profile"
+        static Profile = "/profile"
         static ProfileUpdate = "/profile/update"
         static Customer = "/customers/update"
         static ChangePassword = "/auth/change-password"
     }
-    static ParkingLot = class {
-        static Get = "/parking-lots"
-        static GetAdminShow = "/parking-lots/admin/show"
-        static Add = "/parking-lots/admin/add"
-        static Update = "/parking-lots/admin/update"
-        static Delete = "/parking-lots/admin/delete"
+    static Course = class {
+        static Get = "/courses"
+        static Add = "/courses/admin/add"
+        static Update = "/courses/admin/update"
+        static Delete = "/courses/admin/delete"
         
         static GetReservations = "/parking-slot-reservations/add"
         static DeleteReservation = "/parking-slot-reservations/delete"

@@ -5,42 +5,31 @@ export default class Constants {
     static Menu = class {
         static List = [
             {
-                label: "Quản lý khách hàng",
-                link: ROUTE_PATH.CUSTOMER,
+                label: "Quản lý khóa học",
+                link: ROUTE_PATH.COURSE_MANAGEMENT,
                 icon: UserOutlined
             },
             {
-                label: "Quản lý bãi đỗ xe",
-                link: ROUTE_PATH.PARKING_LOT,
-                icon: TableOutlined
-            },
-
-            {
-                label: "Quản lý đặt chỗ",
-                link: ROUTE_PATH.PARKING_RESERVATION,
-                icon: CalendarOutlined
-            },
-            {
-                label: "Quản lý vé tháng",
-                link: ROUTE_PATH.REGULAR_PASS_ADMIN,
-                icon: TagOutlined
-            },
+                label: "Quản lý giáo viên",
+                link: ROUTE_PATH.TEACHER_MANAGEMENT,
+                icon: UserOutlined
+            }
         ]
     };
     static MenuClient = class {
         static List = [
             {
-                label: "Bãi gửi xe",
-                link: ROUTE_PATH.PARKING_LOT_CLIENT,
+                label: "Khóa học",
+                link: ROUTE_PATH.LIST_COURSE,
             },
             {
-                label: "Đặt vé tháng",
-                link: ROUTE_PATH.REGULAR_PASS,
+                label: "Giáo viên",
+                link: ROUTE_PATH.LIST_TEACHER,
             },
             {
-                label: "Quy định đỗ xe",
-                link: ROUTE_PATH.PARKING_REGULATIONS,
-            },
+                label: "Tài liệu",
+                link: ROUTE_PATH.LIST_DOCUMENT,
+            }
         ]
     };
     static TOKEN = "token";
@@ -82,33 +71,11 @@ export default class Constants {
         static Id = ":id"
     }
 
-    static ReentryAllowed = class {
-        static Allowed = class {
-            static value = true;
-            static label = "Được phép";
-        }
-        static NotAllowed = class {
-            static value = false;
-            static label = "Không được phép";
-        }
+    static TabCourse = class {
         static List = [
-            { label: "Được phép", value: true },
-            { label: "Không được phép", value: false },
-        ]
-    }
-
-    static ValetParkingAvailable = class {
-        static Available = class {
-            static value = true;
-            static label = "Phải đặt trước";
-        }
-        static Unavailable = class {
-            static value = false;
-            static label = "Không phải đặt trước";
-        }
-        static List = [
-            { label: "Phải đặt trước", value: true },
-            { label: "Không phải đặt trước", value: false },
+            { label: "Hình ảnh", value: 1 },
+            { label: "Mô tả khóa học", value: 2 },
+            { label: "Giáo viên giảng dạy", value: 3 },
         ]
     }
 
@@ -116,10 +83,12 @@ export default class Constants {
         static MALE = class {
             static value = "MALE";
             static label = "Nam";
+            static position = "Thầy";
         }
         static FEMALE = class {
             static value = "FEMALE";
             static label = "Nữ";
+            static position = "Cô";
         }
         static List = [
             { label: "Nam", value: "MALE" },
