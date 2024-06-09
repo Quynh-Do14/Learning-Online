@@ -11,6 +11,12 @@ import courseService from '../../../infrastructure/repositories/course/service/c
 import UploadImage from '../../../infrastructure/common/components/input/upload-image';
 import TextEditorCommon from '../../../infrastructure/common/components/input/text-editor';
 import InputNumberCommon from '../../../infrastructure/common/components/input/input-number';
+import InputSelectAPICommon from '../../../infrastructure/common/components/input/select-api-common';
+import { useRecoilValue } from 'recoil';
+import { TeacherState } from '../../../core/atoms/teacher/teacherState';
+import { CategoryState } from '../../../core/atoms/category/categoryState';
+import InputSelectTeacherCommon from '../../../infrastructure/common/components/input/select-teacher-common';
+import UploadVideo from '../../../infrastructure/common/components/input/upload-video';
 
 const AddCourseManagement = () => {
     const [validate, setValidate] = useState<any>({});
@@ -18,6 +24,11 @@ const AddCourseManagement = () => {
     const [submittedTime, setSubmittedTime] = useState<any>();
     const [imageUrl, setImageUrl] = useState(null);
     const [avatar, setAvatar] = useState(null);
+
+    const [videoUrl, setVideoUrl] = useState(null);
+    const [video, setVideo] = useState(null);
+
+    const dataCategoryState = useRecoilValue(CategoryState).data;
 
     const [_data, _setData] = useState<any>({});
     const dataCourse = _data;
@@ -49,6 +60,8 @@ const AddCourseManagement = () => {
         await setSubmittedTime(Date.now());
         if (isValidData()) {
             await courseService.addCourse({
+                courseImage: avatar,
+                courseVideo: video,
                 name: dataCourse.name,
                 category: dataCourse.category,
                 cost: dataCourse.cost,
@@ -64,7 +77,6 @@ const AddCourseManagement = () => {
             WarningMessage("Nhập thiếu thông tin", "Vui lòng nhập đầy đủ thông tin")
         };
     };
-    console.log("dataCourse", dataCourse);
 
     return (
         <ManageLayout breadcrumb={"Quản lý khóa học"} title={"Thêm khóa học"} redirect={ROUTE_PATH.COURSE_MANAGEMENT}>
@@ -72,13 +84,18 @@ const AddCourseManagement = () => {
                 <div className='bg-white scroll-auto'>
                     <Row>
                         <Col xs={24} sm={24} md={12} lg={8} xl={6} xxl={5} className='border-add flex justify-center'>
-                            <div className='legend-title'>Thêm mới ảnh</div>
-                            <UploadImage
-                                attributeImg={dataCourse.avatar}
-                                imageUrl={imageUrl}
-                                setAvatar={setAvatar}
-                                setImageUrl={setImageUrl}
-                            />
+                            <div className='flex flex-col gap-4'>
+                                <div>
+                                    <div className='legend-title'>Thêm mới ảnh</div>
+                                    <UploadImage
+                                        attributeImg={dataCourse.avatar}
+                                        imageUrl={imageUrl}
+                                        setAvatar={setAvatar}
+                                        setImageUrl={setImageUrl}
+                                    />
+                                </div>
+                            </div>
+
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={16} xl={18} xxl={19} className='border-add'>
                             <div className='legend-title'>Thêm thông tin mới</div>
@@ -97,7 +114,7 @@ const AddCourseManagement = () => {
                                     />
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <InputTextCommon
+                                    <InputSelectAPICommon
                                         label={"Danh mục"}
                                         attribute={"category"}
                                         isRequired={true}
@@ -107,6 +124,7 @@ const AddCourseManagement = () => {
                                         validate={validate}
                                         setValidate={setValidate}
                                         submittedTime={submittedTime}
+                                        listDataOfItem={dataCategoryState}
                                     />
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
@@ -120,6 +138,27 @@ const AddCourseManagement = () => {
                                         validate={validate}
                                         setValidate={setValidate}
                                         submittedTime={submittedTime}
+                                    />
+                                </Col>
+                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <InputSelectTeacherCommon
+                                        label={"Giáo viên"}
+                                        attribute={"teacher"}
+                                        isRequired={true}
+                                        dataAttribute={dataCourse.teacher}
+                                        setData={setDataCourse}
+                                        disabled={false}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <UploadVideo
+                                        label={"Tải video"}
+                                        attributeImg={dataCourse.video}
+                                        setVideo={setVideo}
+                                        setImageUrl={setVideoUrl}
                                     />
                                 </Col>
                                 <Col span={24}>

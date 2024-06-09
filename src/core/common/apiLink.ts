@@ -7,27 +7,41 @@ export class Endpoint {
         static Customer = "/customers/update"
         static ChangePassword = "/auth/change-password"
     }
+    static Category = class {
+        static Get = "/categories"
+        static Add = "/categories/admin/add"
+        static Update = "/categories/admin/update"
+        static Delete = "/categories/admin/delete"
+    }
+
     static Course = class {
         static Get = "/courses"
         static Add = "/courses/admin/add"
         static Update = "/courses/admin/update"
         static Delete = "/courses/admin/delete"
-        
-        static GetReservations = "/parking-slot-reservations/add"
-        static DeleteReservation = "/parking-slot-reservations/delete"
-        static GetReservationAdmin = "/parking-slot-reservations/admin"
-        static GetReservationShow = "/parking-slot-reservations/show"
+        static Buy = "/courses"
     }
-    static RegularPass = class {
-        static Get = "/regular-passes/show"
-        static Add = "/regular-passes/add"
-        static Renew = "/regular-passes/renew"
-        static GetAdmin = "/regular-passes/admin"
+
+    static Teacher = class {
+        static Get = "/teachers"
+        static Add = "/teachers/admin/add"
+        static Update = "/teachers/admin/update"
+        static Delete = "/teachers/admin/delete"
     }
-    static Customer = class {
-        static Get = "/customers/admin"
-        static Add = "/customers/add"
-        static Update = "/customers/update"
-        static Delete = "/customers/delete"
+
+    static Lesson = class {
+        static Get = "/lessions"
+        static GetPublic = "/lessions/public"
+        static Add = "/lessions/admin/add"
+        static Update = "/lessions/admin/update"
+        static Delete = "/lessions/admin/delete"
     }
+
+    static Discipline = class {
+        static Get = "/disciplines"
+        static Add = "/disciplines/admin/add"
+        static Update = "/disciplines/admin/update"
+        static Delete = "/disciplines/admin/delete"
+    }
+
 }

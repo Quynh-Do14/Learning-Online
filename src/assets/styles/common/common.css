@@ -86,7 +86,7 @@
     padding: 30px 20px;
 }
 
-.ant-upload {
+.upload-common .ant-upload {
     background-color: white;
     border-radius: 50%;
     border: 3px solid #0d9e6d;

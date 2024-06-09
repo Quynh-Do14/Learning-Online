@@ -8,17 +8,17 @@ import { ROUTE_PATH } from '../../../core/common/appRouter'
 import { useNavigate } from 'react-router-dom';
 import DialogConfirmCommon from '../../../infrastructure/common/components/modal/dialogConfirm'
 import Constants from '../../../core/common/constants'
-import courseService from '../../../infrastructure/repositories/course/service/course.service'
 import ManageLayout from '../../../infrastructure/common/Layouts/Manage-Layout'
 import { PaginationCommon } from '../../../infrastructure/common/components/pagination/Pagination'
 import { TitleTableCommon } from '../../../infrastructure/common/components/text/title-table-common'
 import { ActionCommon } from '../../../infrastructure/common/components/action/action-common'
 import { ButtonCommon } from '../../../infrastructure/common/components/button/button-common'
 import { InputSearchCommon } from '../../../infrastructure/common/components/input/input-search-common'
+import teacherService from '../../../infrastructure/repositories/teacher/service/teacher.service'
 
 let timeout: any
-const ListCourseManagement = () => {
-    const [listCourse, setListCourse] = useState<Array<any>>([])
+const ListTeacherManagement = () => {
+    const [listTeacher, setListTeacher] = useState<Array<any>>([])
     const [total, setTotal] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);
@@ -32,20 +32,18 @@ const ListCourseManagement = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const onGetListCourseAsync = async ({ name = "", size = pageSize, page = currentPage, startDate = "", endDate = "" }) => {
+    const onGetListTeacherAsync = async ({ name = "", size = pageSize, page = currentPage }) => {
         const param = {
             page: page - 1,
             size: size,
             keyword: name,
-            // startDate: startDate,
-            // endDate: endDate,
         }
         try {
-            await courseService.getCourse(
+            await teacherService.getTeacher(
                 param,
                 setLoading
             ).then((res) => {
-                setListCourse(res.content)
+                setListTeacher(res.content)
                 setTotal(res.totalElements)
             })
         }
@@ -53,15 +51,15 @@ const ListCourseManagement = () => {
             console.error(error)
         }
     }
-    const onSearch = async (name = "", size = pageSize, page = 1, startDate = "", endDate = "") => {
-        await onGetListCourseAsync({ name: name, size: size, page: page, startDate: startDate, endDate: endDate });
+    const onSearch = async (name = "", size = pageSize, page = 1) => {
+        await onGetListTeacherAsync({ name: name, size: size, page: page, });
     };
 
     const onChangeSearchText = (e: any) => {
         setSearchText(e.target.value);
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            onSearch(e.target.value, pageSize, currentPage, startDate, endDate).then((_) => { });
+            onSearch(e.target.value, pageSize, currentPage).then((_) => { });
         }, Constants.DEBOUNCE_SEARCH);
     };
 
@@ -70,12 +68,12 @@ const ListCourseManagement = () => {
     }, [])
     const onChangePage = async (value: any) => {
         setCurrentPage(value)
-        await onSearch(searchText, pageSize, value, startDate, endDate).then(_ => { });
+        await onSearch(searchText, pageSize, value).then(_ => { });
     }
     const onPageSizeChanged = async (value: any) => {
         setPageSize(value)
         setCurrentPage(1)
-        await onSearch(searchText, value, 1, startDate, endDate).then(_ => { });
+        await onSearch(searchText, value, 1).then(_ => { });
     }
 
     const onOpenModalDelete = (id: any) => {
@@ -86,10 +84,10 @@ const ListCourseManagement = () => {
     const onCloseModalDelete = () => {
         setIsDeleteModal(false);
     };
-    const onDeleteUser = async () => {
+    const onDeleteAsync = async () => {
         setIsDeleteModal(false);
         try {
-            await courseService.deleteCourse(
+            await teacherService.deleteTeacher(
                 Number(idSelected),
                 setLoading
             ).then((res) => {
@@ -103,17 +101,17 @@ const ListCourseManagement = () => {
         }
     }
     const onNavigate = (id: any) => {
-        navigate(`${(ROUTE_PATH.VIEW_COURSE_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
+        navigate(`${(ROUTE_PATH.VIEW_TEACHER_MANAGEMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
     }
     return (
-        <ManageLayout breadcrumb={"Quản lý khóa học"} title={"Danh sách khóa học"} redirect={""}>
+        <ManageLayout breadcrumb={"Quản lý giáo viên"} title={"Danh sách giáo viên"} redirect={""}>
             <div className='flex flex-col header-page'>
                 <Row className='filter-page mb-2 py-2-5' gutter={[10, 10]} justify={"space-between"} align={"middle"}>
                     <Col xs={24} sm={24} lg={16}>
                         <Row align={"middle"} gutter={[10, 10]}>
                             <Col xs={24} sm={12} lg={12}>
                                 <InputSearchCommon
-                                    placeholder="Tìm kiếm theo tên khóa học..."
+                                    placeholder="Tìm kiếm theo tên giáo viên..."
                                     value={searchText}
                                     onChange={onChangeSearchText}
                                     disabled={false}
@@ -126,14 +124,14 @@ const ListCourseManagement = () => {
                         <ButtonCommon
                             icon={<PlusOutlined />}
                             classColor="green"
-                            onClick={() => navigate(ROUTE_PATH.ADD_COURSE_MANAGEMENT)}
+                            onClick={() => navigate(ROUTE_PATH.ADD_TEACHER_MANAGEMENT)}
                             title={"Thêm mới"} />
                     </Col>
                 </Row>
             </div>
             <div className='flex-1 overflow-auto bg-[#FFFFFF] content-page'>
                 <Table
-                    dataSource={listCourse}
+                    dataSource={listTeacher}
                     pagination={false}
                     className='table-common'
                 >
@@ -152,21 +150,11 @@ const ListCourseManagement = () => {
                         title={
                             <TitleTableCommon
                                 title="Tên"
-                                width={'250px'}
+                                width={'200px'}
                             />
                         }
-                        key={"name"}
-                        dataIndex={"name"}
-                    />
-                    <Column
-                        title={
-                            <TitleTableCommon
-                                title="Danh mục"
-                                width={'150px'}
-                            />
-                        }
-                        key={"category"}
-                        dataIndex={"category"}
+                        key={"user"}
+                        dataIndex={"user"}
                         render={(val) => {
                             return (
                                 <div>{val?.name}</div>
@@ -176,12 +164,72 @@ const ListCourseManagement = () => {
                     <Column
                         title={
                             <TitleTableCommon
-                                title="Giáo viên"
+                                title="Họ và tên"
                                 width={'200px'}
                             />
                         }
-                        key={"operatingCompanyName"}
-                        dataIndex={"operatingCompanyName"}
+                        key={"user"}
+                        dataIndex={"user"}
+                        render={(val) => {
+                            return (
+                                <div>{val?.name}</div>
+                            )
+                        }}
+                    />
+                    <Column
+                        title={
+                            <TitleTableCommon
+                                title="Email"
+                                width={'200px'}
+                            />
+                        }
+                        key={"user"}
+                        dataIndex={"user"}
+                        render={(val) => {
+                            return (
+                                <div>{val?.email}</div>
+                            )
+                        }}
+                    />
+                    <Column
+                        title={
+                            <TitleTableCommon
+                                title="SĐT"
+                                width={'200px'}
+                            />
+                        }
+                        key={"user"}
+                        dataIndex={"user"}
+                        render={(val) => {
+                            return (
+                                <div>{val?.phoneNumber}</div>
+                            )
+                        }}
+                    />
+                    <Column
+                        title={
+                            <TitleTableCommon
+                                title="Chuyên ngành"
+                                width={'200px'}
+                            />
+                        }
+                        key={"discipline"}
+                        dataIndex={"discipline"}
+                        render={(val) => {
+                            return (
+                                <div>{val?.name}</div>
+                            )
+                        }}
+                    />
+                    <Column
+                        title={
+                            <TitleTableCommon
+                                title="Trình độ học vấn"
+                                width={'200px'}
+                            />
+                        }
+                        key={"level"}
+                        dataIndex={"level"}
                     />
                     <Column
                         title={
@@ -224,12 +272,12 @@ const ListCourseManagement = () => {
                 />
             </div>
             <DialogConfirmCommon
-                message={"Bạn có muốn xóa khóa học này ra khỏi hệ thống"}
+                message={"Bạn có muốn xóa giáo viên này ra khỏi hệ thống"}
                 titleCancel={"Bỏ qua"}
-                titleOk={"Xóa khóa học"}
+                titleOk={"Xóa giáo viên"}
                 visible={isDeleteModal}
                 handleCancel={onCloseModalDelete}
-                handleOk={onDeleteUser}
+                handleOk={onDeleteAsync}
                 title={"Xác nhận"}
             />
             <FullPageLoading isLoading={loading} />
@@ -237,4 +285,4 @@ const ListCourseManagement = () => {
     )
 }
 
-export default ListCourseManagement
+export default ListTeacherManagement

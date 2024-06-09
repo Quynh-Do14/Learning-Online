@@ -12,6 +12,14 @@ import Constants from '../../../core/common/constants';
 import { ProfileState } from '../../../core/atoms/profile/profileState';
 import { BreadcrumbCommon } from './Breadcumb';
 import logo from '../../../assets/images/logo.jpg';
+import teacherService from '../../repositories/teacher/service/teacher.service';
+import { TeacherState } from '../../../core/atoms/teacher/teacherState';
+import { DisciplineState } from '../../../core/atoms/discipline/disciplineState';
+import { CategoryState } from '../../../core/atoms/category/categoryState';
+import categoryService from '../../repositories/category/service/category.service';
+import { isTokenStoraged } from '../../utils/storage';
+import courseService from '../../repositories/course/service/course.service';
+import { CourseState } from '../../../core/atoms/course/courseState';
 
 const { Header, Content, Sider } = Layout;
 
@@ -24,6 +32,10 @@ const ManageLayout = ({ ...props }: any) => {
     // const [, setDataPosition] = useRecoilState(PositionState);
     const [dataProfile, setDataProfile] = useState<any>({});
     const [, setProfileState] = useRecoilState(ProfileState);
+    const [, setTeacherState] = useRecoilState(TeacherState);
+    const [, setDisciplineState] = useRecoilState(DisciplineState);
+    const [, setCategoryState] = useRecoilState(CategoryState);
+    const [, setCourseState] = useRecoilState(CourseState);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -42,7 +54,7 @@ const ManageLayout = ({ ...props }: any) => {
             await authService.logout(
                 setLoading
             ).then(() => {
-                navigate(ROUTE_PATH.LOGIN);
+                navigate(ROUTE_PATH.HOME_PAGE);
                 window.location.reload();
             });
         } catch (error) {
@@ -51,15 +63,42 @@ const ManageLayout = ({ ...props }: any) => {
     }
 
     const getProfileUser = async () => {
+        if (isTokenStoraged()) {
+            try {
+                await authService.profile(
+                    () => { }
+                ).then((response) => {
+                    if (response) {
+                        setDataProfile(response)
+                        setProfileState(
+                            {
+                                user: response,
+                            }
+                        )
+                    }
+                })
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (isTokenStoraged()) {
+            getProfileUser().then(() => { });
+        }
+    }, [isTokenStoraged()]);
+
+    const getTeacherAsync = async () => {
         try {
-            await authService.profile(
+            await teacherService.getTeacher(
+                {},
                 () => { }
             ).then((response) => {
                 if (response) {
-                    setDataProfile(response)
-                    setProfileState(
+                    setTeacherState(
                         {
-                            user: response,
+                            data: response.content,
                         }
                     )
                 }
@@ -69,10 +108,74 @@ const ManageLayout = ({ ...props }: any) => {
         }
     }
     useEffect(() => {
-        getProfileUser().then(() => { })
+        getTeacherAsync().then(() => { })
     }, [])
 
+    const getDisciplinesAsync = async () => {
+        try {
+            await teacherService.getTeacher(
+                {},
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setDisciplineState(
+                        {
+                            data: response.content,
+                        }
+                    )
+                }
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        getDisciplinesAsync().then(() => { })
+    }, [])
 
+    const getCategoryAsync = async () => {
+        try {
+            await categoryService.getCategory(
+                {},
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setCategoryState(
+                        {
+                            data: response.content,
+                        }
+                    )
+                }
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        getCategoryAsync().then(() => { })
+    }, [])
+
+    const onGetListCourseAsync = async () => {
+        try {
+            await courseService.getCourse(
+                {},
+                setLoading
+            ).then((response) => {
+                setCourseState(
+                    {
+                        data: response.content,
+                    }
+                )
+            })
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        onGetListCourseAsync().then(() => { });
+    }, []);
 
     const listAction = () => {
         return (

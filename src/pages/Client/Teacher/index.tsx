@@ -1,65 +1,71 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import LayoutClient from '../../../infrastructure/common/Layouts/Client-Layout'
 import { Col, Row, Tooltip } from 'antd'
 import { configGender } from '../../../infrastructure/helper/helper'
+import teacherService from '../../../infrastructure/repositories/teacher/service/teacher.service'
+import { FullPageLoading } from '../../../infrastructure/common/components/controls/loading'
+import { PaginationCommon } from '../../../infrastructure/common/components/pagination/Pagination'
+import Constants from '../../../core/common/constants'
+import noAvatar from "../../../assets/images/no-avatar.png"
+let timeout: any
 
-const data = [
-    {
-        name: "Văn Trịnh Quỳnh An",
-        img: "https://hocmai.vn/file.php/1/Anh_giao_vien_THCS_va_TH/Van_Trinh_Quynh_An/Form_mau_anh_dai_dien_236_x_315.png",
-        gender: "FEMALE",
-        bg: "Trường THPT Gia Định, TP.HCM",
-        description: "Ankipedia không phải lúc nào cũng đúng, nhưng sẵn sàng cập nhật, không phải là nguồn tài liệu cuối cùng mà sẽ là nguồn tài liệu đầu tiên của học sinh."
-    },
-    {
-        name: "Văn Trịnh Quỳnh An",
-        img: "https://hocmai.vn/file.php/1/Anh_giao_vien_THCS_va_TH/Van_Trinh_Quynh_An/Form_mau_anh_dai_dien_236_x_315.png",
-        gender: "FEMALE",
-        bg: "Trường THPT Gia Định, TP.HCM",
-        description: "Ankipedia không phải lúc nào cũng đúng, nhưng sẵn sàng cập nhật, không phải là nguồn tài liệu cuối cùng mà sẽ là nguồn tài liệu đầu tiên của học sinh."
-    },
-    {
-        name: "Văn Trịnh Quỳnh An",
-        img: "https://hocmai.vn/file.php/1/Anh_giao_vien_THCS_va_TH/Van_Trinh_Quynh_An/Form_mau_anh_dai_dien_236_x_315.png",
-        gender: "FEMALE",
-        bg: "Trường THPT Gia Định, TP.HCM",
-        description: "Ankipedia không phải lúc nào cũng đúng, nhưng sẵn sàng cập nhật, không phải là nguồn tài liệu cuối cùng mà sẽ là nguồn tài liệu đầu tiên của học sinh."
-    },
-    {
-        name: "Văn Trịnh Quỳnh An",
-        img: "https://hocmai.vn/file.php/1/Anh_giao_vien_THCS_va_TH/Van_Trinh_Quynh_An/Form_mau_anh_dai_dien_236_x_315.png",
-        gender: "FEMALE",
-        bg: "Trường THPT Gia Định, TP.HCM",
-        description: "Ankipedia không phải lúc nào cũng đúng, nhưng sẵn sàng cập nhật, không phải là nguồn tài liệu cuối cùng mà sẽ là nguồn tài liệu đầu tiên của học sinh."
-    },
-    {
-        name: "Văn Trịnh Quỳnh An",
-        img: "https://hocmai.vn/file.php/1/Anh_giao_vien_THCS_va_TH/Van_Trinh_Quynh_An/Form_mau_anh_dai_dien_236_x_315.png",
-        gender: "FEMALE",
-        bg: "Trường THPT Gia Định, TP.HCM",
-        description: "Ankipedia không phải lúc nào cũng đúng, nhưng sẵn sàng cập nhật, không phải là nguồn tài liệu cuối cùng mà sẽ là nguồn tài liệu đầu tiên của học sinh."
-    },
-    {
-        name: "Văn Trịnh Quỳnh An",
-        img: "https://hocmai.vn/file.php/1/Anh_giao_vien_THCS_va_TH/Van_Trinh_Quynh_An/Form_mau_anh_dai_dien_236_x_315.png",
-        gender: "FEMALE",
-        bg: "Trường THPT Gia Định, TP.HCM",
-        description: "Ankipedia không phải lúc nào cũng đúng, nhưng sẵn sàng cập nhật, không phải là nguồn tài liệu cuối cùng mà sẽ là nguồn tài liệu đầu tiên của học sinh."
-    },
-    {
-        name: "Văn Trịnh Quỳnh An",
-        img: "https://hocmai.vn/file.php/1/Anh_giao_vien_THCS_va_TH/Van_Trinh_Quynh_An/Form_mau_anh_dai_dien_236_x_315.png",
-        gender: "FEMALE",
-        bg: "Trường THPT Gia Định, TP.HCM",
-        description: "Ankipedia không phải lúc nào cũng đúng, nhưng sẵn sàng cập nhật, không phải là nguồn tài liệu cuối cùng mà sẽ là nguồn tài liệu đầu tiên của học sinh."
-    },
-]
 const ListTeacherPage = () => {
+    const [listTeacher, setListTeacher] = useState<Array<any>>([])
+    const [total, setTotal] = useState<number>(0)
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(10);
+    const [searchText, setSearchText] = useState<string>("");
+    const [loading, setLoading] = useState(false);
+
+    const onGetListTeacherAsync = async ({ name = "", size = pageSize, page = currentPage }) => {
+        const param = {
+            page: page - 1,
+            size: size,
+            keyword: name,
+        }
+        try {
+            await teacherService.getTeacher(
+                param,
+                setLoading
+            ).then((res) => {
+                setListTeacher(res.content)
+                setTotal(res.totalElements)
+            })
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
+
+    const onSearch = async (name = "", size = pageSize, page = 1) => {
+        await onGetListTeacherAsync({ name: name, size: size, page: page, });
+    };
+
+    const onChangeSearchText = (e: any) => {
+        setSearchText(e.target.value);
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            onSearch(e.target.value, pageSize, currentPage).then((_) => { });
+        }, Constants.DEBOUNCE_SEARCH);
+    };
+
+    useEffect(() => {
+        onSearch().then(_ => { });
+    }, [])
+    const onChangePage = async (value: any) => {
+        setCurrentPage(value)
+        await onSearch(searchText, pageSize, value).then(_ => { });
+    }
+    const onPageSizeChanged = async (value: any) => {
+        setPageSize(value)
+        setCurrentPage(1)
+        await onSearch(searchText, value, 1).then(_ => { });
+    }
     return (
         <LayoutClient>
             <Row gutter={[15, 15]}>
                 {
-                    data.map((it, index) => {
+                    listTeacher.map((it, index) => {
                         return (
                             <Col
                                 xs={24} sm={12} md={8} lg={6}
@@ -69,24 +75,35 @@ const ListTeacherPage = () => {
                                     onClick={() => { }}
                                 >
                                     <div>
-                                        <img src={it.img} alt="" className='w-full' />
+                                        <img src={it.user?.avatar || noAvatar} alt="" className='w-full' />
                                     </div>
                                     <Tooltip
-                                        title={it.name}
+                                        title={it.user?.name}
                                         color='#1e293bb3'
                                     >
                                         <div className='text-truncate text-[14px] text-[#2a70b8] font-semibold hover:text-[#c46f20] hover:underline transition duration-200'>
-                                            {configGender(it.gender)}: {it.name}
+                                            {configGender(it.sex)}: {it.user?.name}
                                         </div>
                                     </Tooltip>
-                                    <p className='text-[14px] font-semibold'>{it.bg}</p>
-                                    <p className='text-truncate-3 text-[14px]'>{it.description}</p>
+                                    <p className='text-[14px] font-semibold'>{it.level}</p>
+                                    <p className='text-truncate-3 text-[14px]'>{it.discipline?.name}</p>
                                 </div>
                             </Col>
                         )
                     })
                 }
             </Row>
+            <div className='flex flex-col'>
+                <PaginationCommon
+                    total={total}
+                    currentPage={currentPage}
+                    onChangePage={onChangePage}
+                    pageSize={pageSize}
+                    onChangeSize={onPageSizeChanged}
+                    disabled={false}
+                />
+            </div>
+            <FullPageLoading isLoading={loading} />
         </LayoutClient>
     )
 }

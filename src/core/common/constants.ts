@@ -5,19 +5,33 @@ export default class Constants {
     static Menu = class {
         static List = [
             {
+                label: "Quản lý danh mục",
+                link: ROUTE_PATH.CATEGORY_MANAGEMENT,
+                icon: UserOutlined
+            },
+            {
                 label: "Quản lý khóa học",
                 link: ROUTE_PATH.COURSE_MANAGEMENT,
+                icon: UserOutlined
+            },
+            {
+                label: "Quản lý bài giảng",
+                link: ROUTE_PATH.LESSON_MANAGEMENT,
                 icon: UserOutlined
             },
             {
                 label: "Quản lý giáo viên",
                 link: ROUTE_PATH.TEACHER_MANAGEMENT,
                 icon: UserOutlined
-            }
+            },
         ]
     };
     static MenuClient = class {
         static List = [
+            {
+                label: "Trang chủ",
+                link: ROUTE_PATH.HOME_PAGE,
+            },
             {
                 label: "Khóa học",
                 link: ROUTE_PATH.LIST_COURSE,
@@ -81,18 +95,18 @@ export default class Constants {
 
     static Gender = class {
         static MALE = class {
-            static value = "MALE";
+            static value = true;
             static label = "Nam";
             static position = "Thầy";
         }
         static FEMALE = class {
-            static value = "FEMALE";
+            static value = false;
             static label = "Nữ";
             static position = "Cô";
         }
         static List = [
-            { label: "Nam", value: "MALE" },
-            { label: "Nữ", value: "FEMALE" },
+            { label: "Nam", value: true },
+            { label: "Nữ", value: false },
         ]
     }
 };

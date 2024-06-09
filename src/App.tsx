@@ -5,29 +5,36 @@ import { useRecoilState } from "recoil";
 import { ProfileState } from "./core/atoms/profile/profileState";
 import authService from "./infrastructure/repositories/auth/service/auth.service";
 import { useEffect } from "react";
+import { isTokenStoraged } from "./infrastructure/utils/storage";
 
 function App() {
   const [, setProfileState] = useRecoilState(ProfileState);
   const getProfileUser = async () => {
-    try {
-      await authService.profile(
-        () => { }
-      ).then((response) => {
-        if (response) {
-          setProfileState(
-            {
-              user: response,
-            }
-          )
-        }
-      })
-    } catch (error) {
-      console.error(error);
+    if (isTokenStoraged()) {
+      try {
+        await authService.profile(
+          () => { }
+        ).then((response) => {
+          if (response) {
+            setProfileState(
+              {
+                user: response,
+              }
+            )
+          }
+        })
+      } catch (error) {
+        console.error(error);
+      }
     }
+
   }
+  
   useEffect(() => {
-    getProfileUser().then(() => { })
-  }, [])
+    if (isTokenStoraged()) {
+        getProfileUser().then(() => { });
+    }
+}, [isTokenStoraged()]);
 
   return (
     <div className="App">

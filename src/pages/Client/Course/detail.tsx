@@ -9,35 +9,17 @@ import { ROUTE_PATH } from '../../../core/common/appRouter'
 import courseService from '../../../infrastructure/repositories/course/service/course.service'
 import { FullPageLoading } from '../../../infrastructure/common/components/controls/loading'
 import { useParams } from 'react-router-dom'
+import DialogConfirmCommon from '../../../infrastructure/common/components/modal/dialogConfirm'
 
-
-const dataR = [
-    {
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMCJuX6BjtU8liZm2cZSidmtUw09IWEuI5XA&s",
-        name: "Thiết kế cơ sở dữ liệu với MySQL",
-        price: 123000
-    },
-    {
-        img: "https://blog.haposoft.com/content/images/size/w2000/2021/11/laravel-featured.png",
-        name: "Thiết kế cơ sở dữ liệu với MySQL",
-        price: 123000
-    },
-    {
-        img: "https://blog.haposoft.com/content/images/size/w2000/2021/11/laravel-featured.png",
-        name: "Thiết kế cơ sở dữ liệu với MySQL",
-        price: 4553000
-    },
-    {
-        img: "https://media.licdn.com/dms/image/D5612AQFMxThwQn7HZg/article-cover_image-shrink_720_1280/0/1697274440798?e=2147483647&v=beta&t=Tf2EFl37sb-ltV1w-tGJG9y4ghxvxNNM1y9IBIcwYTY",
-        name: "Thiết kế cơ sở dữ liệu với MySQL",
-        price: 123000
-    },
-]
 const DetailCourse = () => {
     const [tab, setTab] = useState(2);
     const [loading, setLoading] = useState<boolean>(false);
     const [detailCourse, setDetailCourse] = useState<any>({});
+    const [detailTeacher, setDetailTeacher] = useState<any>({});
+    const [detailSuggestion, setDetailSuggestion] = useState<Array<any>>([]);
     const [videoURL, setVideoURL] = useState<string>("");
+    const [isOpenModalBuyCourse, setIsOpenModalBuyCourse] = useState<boolean>(false);
+
     const param = useParams();
 
     const onGetCourseByIdAsync = async () => {
@@ -46,17 +28,43 @@ const DetailCourse = () => {
                 Number(param.id),
                 setLoading
             ).then((res) => {
-                setDetailCourse(res)
-                setVideoURL(res.courseVideo?.fileCode)
+                setDetailCourse(res?.course)
+                setVideoURL(res.course?.courseVideo?.fileCode)
+                setDetailSuggestion(res?.suggestions)
+                setDetailTeacher(res.course?.teacher)
+            })
+        }
+        catch (error) {
+            console.error(error)
+        }
+    };
+    useEffect(() => {
+        onGetCourseByIdAsync().then(_ => { });
+    }, []);
+
+    const openModalBuyCourse = () => {
+        setIsOpenModalBuyCourse(true);
+    };
+
+    const onCloseModalBuyCourse = () => {
+        setIsOpenModalBuyCourse(false);
+    };
+
+    const onBuyCourseAsync = async () => {
+        try {
+            await courseService.buyCourse(
+                Number(param.id),
+                () => { },
+                setLoading
+            ).then((response) => {
+                onCloseModalBuyCourse();
+                window.open(response.payUrl, '_blank');
             })
         }
         catch (error) {
             console.error(error)
         }
     }
-    useEffect(() => {
-        onGetCourseByIdAsync().then(_ => { });
-    }, [])
 
     return (
         <LayoutClient>
@@ -69,7 +77,7 @@ const DetailCourse = () => {
                 <Row gutter={[25, 20]}>
                     <Col span={14}>
                         {
-                            videoURL.length
+                            videoURL?.length
                             &&
                             <video style={{ width: "100%", height: "100%" }} controls>
                                 <source
@@ -86,7 +94,7 @@ const DetailCourse = () => {
                             <p className='text-[14px] font-semibold text-[#1e293bb3]'>(Còn lại {detailCourse.remain} khóa) </p>
                             <div className='flex gap-1 items-center text-[16px] font-semibold'>
                                 <p className='text-[#1e293bb3]'>Giáo viên:</p>
-                                <p className='text-[#2a70b8]'>{detailCourse.teacher} </p>
+                                <p className='text-[#2a70b8]'>{detailTeacher?.user?.name} </p>
                             </div>
                             <div className='flex gap-1 items-center text-[24px] font-semibold text-[#d63939]'>
                                 <p>Giá:</p>
@@ -97,7 +105,7 @@ const DetailCourse = () => {
                             <div className='flex'>
                                 <ButtonCommon
                                     classColor={'orange'}
-                                    onClick={() => { }}
+                                    onClick={openModalBuyCourse}
                                     title={'Mua ngay'} />
                             </div>
                         </div>
@@ -123,45 +131,72 @@ const DetailCourse = () => {
                                 :
                                 tab == 2
                                     ?
+                                    // <div className='flex flex-col gap-4'>
+                                    //     <div className='flex flex-col gap-2'>
+                                    //         <p className='text-[14px] font-semibold text-[#1e293be3]'>Hệ thống bài giảng của khóa học:</p>
+                                    //         <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
+                                    //             <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
+                                    //             <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
+                                    //             <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
+                                    //         </ul>
+                                    //     </div>
+                                    //     <div className='flex flex-col gap-2'>
+                                    //         <p className='text-[14px] font-semibold text-[#1e293be3]'>Để việc học tập đạt hiệu quả cao, các con cần tuân thủ những điều sau:</p>
+                                    //         <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
+                                    //             <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
+                                    //             <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
+                                    //             <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
+                                    //         </ul>
+                                    //     </div>
+                                    //     <div className='flex flex-col gap-2'>
+                                    //         <p className='text-[14px] font-semibold text-[#1e293be3]'>Để việc học tập đạt hiệu quả cao, các con cần tuân thủ những điều sau:</p>
+                                    //         <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
+                                    //             <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
+                                    //             <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
+                                    //             <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
+                                    //         </ul>
+                                    //     </div>
+                                    // </div>
                                     <div className='flex flex-col gap-4'>
                                         <div className='flex flex-col gap-2'>
-                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Hệ thống bài giảng của khóa học:</p>
-                                            <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
-                                                <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
-                                                <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
-                                                <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
-                                            </ul>
+                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Mô tả khóa học:</p>
+                                            <div dangerouslySetInnerHTML={{ __html: detailCourse.description }} />
                                         </div>
                                         <div className='flex flex-col gap-2'>
-                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Để việc học tập đạt hiệu quả cao, các con cần tuân thủ những điều sau:</p>
-                                            <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
-                                                <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
-                                                <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
-                                                <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
-                                            </ul>
+                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Đối tượng hướng tới:</p>
+                                            <div dangerouslySetInnerHTML={{ __html: detailCourse.object }} />
                                         </div>
                                         <div className='flex flex-col gap-2'>
-                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Để việc học tập đạt hiệu quả cao, các con cần tuân thủ những điều sau:</p>
-                                            <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
-                                                <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
-                                                <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
-                                                <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
-                                            </ul>
+                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Kêt quả đạt được:</p>
+                                            <div dangerouslySetInnerHTML={{ __html: detailCourse.result }} />
                                         </div>
                                     </div>
                                     :
-                                    <div></div>
+                                    <div>
+                                        <div className='flex flex-col gap-4'>
+                                            <div className='flex flex-col gap-2'>
+                                                <p className='text-[14px] font-semibold text-[#1e293be3]'>Thông tin giáo viên</p>
+                                                <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
+                                                    <li>Giáo viên: {detailTeacher?.user?.name}</li>
+                                                    <li>{detailTeacher?.discipline?.name}</li>
+                                                    <li>{detailTeacher?.level}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                         }
                     </Col>
                     <Col span={10} className='flex flex-col gap-2'>
                         <p className='text-[14px] font-semibold text-[#1e293be3]'>Khóa học liên quan</p>
                         {
-                            dataR.map((it, index) => {
+                            detailSuggestion.map((it, index) => {
                                 return (
                                     <div key={index} className='shadow-md p-2 rounded-[4px]'>
                                         <Row gutter={[15, 15]}>
                                             <Col span={12}>
-                                                <img src={it.img} alt="" className='w-full' />
+                                                <div className='w-full h-[50%]'>
+                                                    <img src={configImageURL(it.courseImage?.fileCode)} alt="" className='w-full' />
+                                                </div>
                                             </Col>
                                             <Col span={12}>
                                                 <div>
@@ -173,7 +208,7 @@ const DetailCourse = () => {
                                                     </Tooltip>
                                                     <div className='flex gap-1 items-center text-[14px] font-semibold text-[#d63939] '>
                                                         <p>Giá:</p>
-                                                        <p>{formatCurrencyVND(String(it.price))} </p>
+                                                        <p>{formatCurrencyVND(String(it.cost))} </p>
                                                     </div>
                                                 </div>
                                             </Col>
@@ -185,6 +220,15 @@ const DetailCourse = () => {
                     </Col>
                 </Row>
             </div>
+            <DialogConfirmCommon
+                message={"Bạn có muốn mua khóa học này?"}
+                titleCancel={"Bỏ qua"}
+                titleOk={"Đồng ý"}
+                visible={isOpenModalBuyCourse}
+                handleCancel={onCloseModalBuyCourse}
+                handleOk={onBuyCourseAsync}
+                title={"Xác nhận"}
+            />
             <FullPageLoading isLoading={loading} />
         </LayoutClient >
     )

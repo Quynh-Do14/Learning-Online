@@ -9,6 +9,15 @@ import ManageLayout from "../common/Layouts/Manage-Layout";
 import ListCourseManagement from "../../pages/Manage/course-management/list";
 import AddCourseManagement from "../../pages/Manage/course-management/add";
 import ViewCourseManagement from "../../pages/Manage/course-management/view";
+import ListCategoryManagement from "../../pages/Manage/category-management/list";
+import AddCategoryManagement from "../../pages/Manage/category-management/add";
+import ViewCategoryManagement from "../../pages/Manage/category-management/view";
+import ListTeacherManagement from "../../pages/Manage/teacher-management/list";
+import AddTeacherManagement from "../../pages/Manage/teacher-management/add";
+import ViewTeacherManagement from "../../pages/Manage/teacher-management/view";
+import ListLessonManagement from "../../pages/Manage/lesson/list";
+import AddLessonManagement from "../../pages/Manage/lesson/add";
+import ViewLessonManagement from "../../pages/Manage/lesson/view";
 
 export const privateRoutes = [
 
@@ -48,7 +57,21 @@ export const privateRoutes = [
         component: ManageLayout,
         private: true,
     },
-
+    {
+        path: ROUTE_PATH.CATEGORY_MANAGEMENT,
+        component: ListCategoryManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.ADD_CATEGORY_MANAGEMENT,
+        component: AddCategoryManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.VIEW_CATEGORY_MANAGEMENT,
+        component: ViewCategoryManagement,
+        private: true,
+    },
     {
         path: ROUTE_PATH.COURSE_MANAGEMENT,
         component: ListCourseManagement,
@@ -62,6 +85,38 @@ export const privateRoutes = [
     {
         path: ROUTE_PATH.VIEW_COURSE_MANAGEMENT,
         component: ViewCourseManagement,
+        private: true,
+    },
+
+    {
+        path: ROUTE_PATH.TEACHER_MANAGEMENT,
+        component: ListTeacherManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.ADD_TEACHER_MANAGEMENT,
+        component: AddTeacherManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.VIEW_TEACHER_MANAGEMENT,
+        component: ViewTeacherManagement,
+        private: true,
+    },
+
+    {
+        path: ROUTE_PATH.LESSON_MANAGEMENT,
+        component: ListLessonManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.ADD_LESSON_MANAGEMENT,
+        component: AddLessonManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.VIEW_LESSON_MANAGEMENT,
+        component: ViewLessonManagement,
         private: true,
     },
 ]

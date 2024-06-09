@@ -3,12 +3,12 @@ import { FailMessage, SuccessMessage } from "../../../common/components/toast/no
 import { RequestService } from "../../../utils/response";
 import { saveToken } from "../../../utils/storage";
 
-class CourseService {
-    async getCourse(params: object, setLoading: Function) {
+class LessonService {
+    async GetLesson(params: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(Endpoint.Course.Get, {
+                .get(Endpoint.Lesson.Get, {
                     ...params
                 })
                 .then(response => {
@@ -24,11 +24,13 @@ class CourseService {
             setLoading(false);
         }
     };
-    async getCourseById(id: number, setLoading: Function) {
+    async GetLessonPublic(params: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(`${Endpoint.Course.Get}/${id}`)
+                .get(Endpoint.Lesson.GetPublic, {
+                    ...params
+                })
                 .then(response => {
                     if (response) {
                         return response
@@ -42,11 +44,29 @@ class CourseService {
             setLoading(false);
         }
     };
-    async addCourse(data: object, onBack: Function, setLoading: Function) {
+    async GetLessonById(id: number, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .postForm(Endpoint.Course.Add,
+                .get(`${Endpoint.Lesson.Get}/${id}`)
+                .then(response => {
+                    if (response) {
+                        return response
+                    }
+                    setLoading(false)
+                    return response;
+                });
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    };
+    async AddLesson(data: object, onBack: Function, setLoading: Function) {
+        setLoading(true)
+        try {
+            return await RequestService
+                .postForm(Endpoint.Lesson.Add,
                     data
                 )
                 .then(response => {
@@ -65,11 +85,11 @@ class CourseService {
             setLoading(false);
         }
     }
-    async updateCourse(id: number, data: object, onBack: Function, setLoading: Function) {
+    async UpdateLesson(id: number, data: object, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .putForm(`${Endpoint.Course.Update}/${id}`,
+                .putForm(`${Endpoint.Lesson.Update}/${id}`,
                     data
                 )
                 .then(response => {
@@ -88,11 +108,11 @@ class CourseService {
             setLoading(false);
         }
     }
-    async deleteCourse(id: number, setLoading: Function) {
+    async DeleteLesson(id: number, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .delete(`${Endpoint.Course.Delete}/${id}`)
+                .delete(`${Endpoint.Lesson.Delete}/${id}`)
                 .then(response => {
                     if (response) {
                         SuccessMessage("Xóa thành công", "")
@@ -108,29 +128,6 @@ class CourseService {
             setLoading(false);
         }
     }
-
-    async buyCourse(id: Number, onBack: Function, setLoading: Function) {
-        setLoading(true)
-        try {
-            return await RequestService
-                .post(`${Endpoint.Course.Buy}/${id}`,
-                )
-                .then(response => {
-                    if (response) {
-                        onBack()
-                        SuccessMessage("Mua khóa học thành công", "")
-                        return response
-                    }
-                    setLoading(false)
-                    return response;
-                });
-        } catch (error) {
-            FailMessage("Mua khóa học không thành công", "Vui lòng kiểm tra thông tin")
-            console.error(error)
-        } finally {
-            setLoading(false);
-        }
-    }
 }
 
-export default new CourseService();
+export default new LessonService();

@@ -12,6 +12,7 @@ import authService from '../../repositories/auth/service/auth.service';
 import { useRecoilState } from 'recoil';
 import { ProfileState } from '../../../core/atoms/profile/profileState';
 import DialogConfirmCommon from '../components/modal/dialogConfirm';
+import RegisterModal from '../../../pages/Auth/Register';
 const HeaderClient = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -20,11 +21,9 @@ const HeaderClient = () => {
     const [isOpenModalLogout, setIsOpenModalLogout] = useState<boolean>(false);
     const [isOpenModalProfile, setIsOpenModalProfile] = useState<boolean>(false);
     const [isOpenModalChangePassword, setIsOpenModalChangePassword] = useState<boolean>(false);
-    const [isOpenModalHistoryShow, setIsOpenModalHistoryShow] = useState<boolean>(false);
-    const [isOpenModalReservationShow, setIsOpenModalReservationShow] = useState<boolean>(false);
-
     const [isLoginClick, setIsLoginClick] = useState<boolean>(false);
-
+    const [dataLogined, setDataLogined] = useState<boolean>(false)
+    const [isRegister, setIsRegisterClick] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false);
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
 
@@ -50,7 +49,7 @@ const HeaderClient = () => {
     }
     useEffect(() => {
         getProfileUser().then(() => { })
-    }, [])
+    }, [dataLogined])
 
     const openModalLogout = () => {
         setIsOpenModalLogout(true);
@@ -66,7 +65,7 @@ const HeaderClient = () => {
             await authService.logout(
                 setLoading
             ).then(() => {
-                navigate(ROUTE_PATH.LOGIN);
+                navigate(ROUTE_PATH.HOME_PAGE);
                 window.location.reload();
             });
         } catch (error) {
@@ -97,22 +96,8 @@ const HeaderClient = () => {
     const onCloseModalChangePassword = () => {
         setIsOpenModalChangePassword(false);
     };
-    const openModalHistoryShow = () => {
-        setIsOpenModalHistoryShow(true);
-    };
 
-    const onCloseModalHistoryShow = () => {
-        setIsOpenModalHistoryShow(false);
-    };
 
-    const openModalReservationShow = () => {
-        setIsOpenModalReservationShow(true);
-    };
-
-    const onCloseModalReservationShow = () => {
-        setIsOpenModalReservationShow(false);
-    };
-    
     const listAction = () => {
         return (
             <Menu className='action-admin'>
@@ -235,8 +220,13 @@ const HeaderClient = () => {
                 isLoginClick={isLoginClick}
                 setIsLoginClick={setIsLoginClick}
                 setLoading={setLoading}
-            // setDataLogined={undefined}
-            // setIsRegisterClick={undefined}
+                setDataLogined={setDataLogined}
+                setIsRegisterClick={setIsRegisterClick}
+            />
+            <RegisterModal
+                setLoading={setLoading}
+                isRegister={isRegister}
+                setIsRegisterClick={setIsRegisterClick}
             />
             <DialogConfirmCommon
                 message={"Bạn có muốn đăng xuất khỏi hệ thống"}

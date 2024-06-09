@@ -1,6 +1,7 @@
 import { Upload } from 'antd';
 import { useEffect, useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
+import { configImageURL } from '../../../helper/helper';
 
 type Props = {
     attributeImg: any,
@@ -55,7 +56,7 @@ function UploadImage(props: Props) {
                 id='upload'
             >
                 {imageUrl ? (
-                    <img src={imageUrl} alt="avatar" className="w-full h-full rounded-full" />
+                    <img src={configImageURL(imageUrl)} alt="avatar" className="w-full h-full rounded-full" />
                 ) : (
                     <div ref={inputRef}>
                         <PlusOutlined />

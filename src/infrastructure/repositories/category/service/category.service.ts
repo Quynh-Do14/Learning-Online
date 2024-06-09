@@ -3,12 +3,12 @@ import { FailMessage, SuccessMessage } from "../../../common/components/toast/no
 import { RequestService } from "../../../utils/response";
 import { saveToken } from "../../../utils/storage";
 
-class CourseService {
-    async getCourse(params: object, setLoading: Function) {
+class CategoryService {
+    async getCategory(params: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(Endpoint.Course.Get, {
+                .get(Endpoint.Category.Get, {
                     ...params
                 })
                 .then(response => {
@@ -24,11 +24,11 @@ class CourseService {
             setLoading(false);
         }
     };
-    async getCourseById(id: number, setLoading: Function) {
+    async getCategoryById(id: number, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(`${Endpoint.Course.Get}/${id}`)
+                .get(`${Endpoint.Category.Get}/${id}`)
                 .then(response => {
                     if (response) {
                         return response
@@ -42,11 +42,11 @@ class CourseService {
             setLoading(false);
         }
     };
-    async addCourse(data: object, onBack: Function, setLoading: Function) {
+    async addCategory(data: object, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .postForm(Endpoint.Course.Add,
+                .post(Endpoint.Category.Add,
                     data
                 )
                 .then(response => {
@@ -65,11 +65,11 @@ class CourseService {
             setLoading(false);
         }
     }
-    async updateCourse(id: number, data: object, onBack: Function, setLoading: Function) {
+    async updateCategory(id: number, data: object, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .putForm(`${Endpoint.Course.Update}/${id}`,
+                .put(`${Endpoint.Category.Update}/${id}`,
                     data
                 )
                 .then(response => {
@@ -88,11 +88,11 @@ class CourseService {
             setLoading(false);
         }
     }
-    async deleteCourse(id: number, setLoading: Function) {
+    async deleteCategory(id: number, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .delete(`${Endpoint.Course.Delete}/${id}`)
+                .delete(`${Endpoint.Category.Delete}/${id}`)
                 .then(response => {
                     if (response) {
                         SuccessMessage("Xóa thành công", "")
@@ -108,29 +108,6 @@ class CourseService {
             setLoading(false);
         }
     }
-
-    async buyCourse(id: Number, onBack: Function, setLoading: Function) {
-        setLoading(true)
-        try {
-            return await RequestService
-                .post(`${Endpoint.Course.Buy}/${id}`,
-                )
-                .then(response => {
-                    if (response) {
-                        onBack()
-                        SuccessMessage("Mua khóa học thành công", "")
-                        return response
-                    }
-                    setLoading(false)
-                    return response;
-                });
-        } catch (error) {
-            FailMessage("Mua khóa học không thành công", "Vui lòng kiểm tra thông tin")
-            console.error(error)
-        } finally {
-            setLoading(false);
-        }
-    }
 }
 
-export default new CourseService();
+export default new CategoryService();
