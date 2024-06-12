@@ -9,11 +9,12 @@ import { WarningMessage } from '../../../infrastructure/common/components/toast/
 import ManageLayout from '../../../infrastructure/common/Layouts/Manage-Layout';
 import InputSelectCommon from '../../../infrastructure/common/components/input/select-common';
 import InputDateCommon from '../../../infrastructure/common/components/input/input-date';
-import { convertStringToBoolean } from '../../../infrastructure/helper/helper';
+import { convertDateOnly, convertStringToBoolean } from '../../../infrastructure/helper/helper';
 import InputPasswordCommon from '../../../infrastructure/common/components/input/input-password';
 import Constants from '../../../core/common/constants';
 import UploadImage from '../../../infrastructure/common/components/input/upload-image';
 import teacherService from '../../../infrastructure/repositories/teacher/service/teacher.service';
+import TextEditorCommon from '../../../infrastructure/common/components/input/text-editor';
 
 const ViewTeacherManagement = () => {
     const [validate, setValidate] = useState<any>({});
@@ -70,18 +71,20 @@ const ViewTeacherManagement = () => {
     useEffect(() => {
         if (detailTeacher) {
             setDataTeacher({
+                file: detailTeacher.teacher?.image?.fileCode,
                 name: detailTeacher.user?.name,
                 email: detailTeacher.user?.email,
                 username: detailTeacher.user?.username,
                 password: detailTeacher.user?.password,
                 dob: detailTeacher.user?.dob,
                 phoneNumber: detailTeacher.user?.phoneNumber,
-                cccd: detailTeacher.cccd,
-                sex: detailTeacher.sex,
-                level: detailTeacher.level,
-                discipline: {
-                    id: 1
-                },
+                cccd: detailTeacher.teacher?.cccd,
+                sex: detailTeacher.teacher?.sex,
+                level: detailTeacher.teacher?.level,
+                discipline: detailTeacher.teacher?.discipline,
+                achievements: detailTeacher.teacher?.achievements,
+                story: detailTeacher.teacher?.story,
+                styleTeaching: detailTeacher.teacher?.styleTeaching,
             });
         };
     }, [detailTeacher]);
@@ -92,18 +95,20 @@ const ViewTeacherManagement = () => {
             await teacherService.updateTeacher(
                 Number(param.id),
                 {
+                    file: avatar || dataTeacher.file,
                     name: dataTeacher.name,
                     email: dataTeacher.email,
                     username: dataTeacher.username,
                     password: dataTeacher.password,
-                    dob: dataTeacher.dob,
+                    dob: convertDateOnly(dataTeacher.dob),
                     phoneNumber: dataTeacher.phoneNumber,
                     cccd: dataTeacher.cccd,
                     sex: convertStringToBoolean(dataTeacher.sex),
                     level: dataTeacher.level,
-                    discipline: {
-                        id: 1
-                    },
+                    discipline: dataTeacher.discipline,
+                    achievements: dataTeacher.achievements,
+                    story: dataTeacher.story,
+                    styleTeaching: dataTeacher.styleTeaching,
                 },
                 onBack,
                 setLoading
@@ -122,16 +127,22 @@ const ViewTeacherManagement = () => {
                         <Col xs={24} sm={24} md={12} lg={8} xl={6} xxl={5} className='border-add flex justify-center'>
                             <div className='legend-title'>Thêm mới ảnh</div>
                             <UploadImage
-                                attributeImg={dataTeacher.avatar}
+                                attributeImg={dataTeacher.file}
                                 imageUrl={imageUrl}
                                 setAvatar={setAvatar}
                                 setImageUrl={setImageUrl}
+                                validate={validate}
+                                setValidate={setValidate}
+                                submittedTime={submittedTime}
+                                isRequired={true}
+                                attribute={'image'}
+                                label={'Ảnh'}
                             />
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={16} xl={18} xxl={19} className='border-add'>
                             <div className='legend-title'>Thêm thông tin mới</div>
                             <Row gutter={[30, 0]}>
-                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                <Col span={24}>
                                     <InputTextCommon
                                         label={"Tên giáo viên"}
                                         attribute={"name"}
@@ -151,7 +162,7 @@ const ViewTeacherManagement = () => {
                                         isRequired={true}
                                         dataAttribute={dataTeacher.email}
                                         setData={setDataTeacher}
-                                        disabled={false}
+                                        disabled={true}
                                         validate={validate}
                                         setValidate={setValidate}
                                         submittedTime={submittedTime}
@@ -164,6 +175,19 @@ const ViewTeacherManagement = () => {
                                         isRequired={true}
                                         dataAttribute={dataTeacher.username}
                                         setData={setDataTeacher}
+                                        disabled={true}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                    />
+                                </Col>
+                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                    <InputTextCommon
+                                        label={"Trình độ học vấn"}
+                                        attribute={"level"}
+                                        isRequired={true}
+                                        dataAttribute={dataTeacher.level}
+                                        setData={setDataTeacher}
                                         disabled={false}
                                         validate={validate}
                                         setValidate={setValidate}
@@ -171,11 +195,11 @@ const ViewTeacherManagement = () => {
                                     />
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <InputPasswordCommon
-                                        label={"Mật khẩu"}
-                                        attribute={"password"}
+                                    <InputTextCommon
+                                        label={"Chuyên ngành"}
+                                        attribute={"discipline"}
                                         isRequired={true}
-                                        dataAttribute={dataTeacher.password}
+                                        dataAttribute={dataTeacher.discipline}
                                         setData={setDataTeacher}
                                         disabled={false}
                                         validate={validate}
@@ -237,18 +261,41 @@ const ViewTeacherManagement = () => {
                                         listDataOfItem={Constants.Gender.List}
                                     />
                                 </Col>
-                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                    <InputTextCommon
-                                        label={"Trình độ học vấn"}
-                                        attribute={"level"}
-                                        isRequired={true}
-                                        dataAttribute={dataTeacher.level}
+                                <Col span={24}>
+                                    <TextEditorCommon
+                                        label={'Tiểu sử'}
+                                        id={"story"}
+                                        attribute={'story'}
                                         setData={setDataTeacher}
-                                        disabled={false}
+                                        dataAttribute={dataTeacher.story}
                                         validate={validate}
                                         setValidate={setValidate}
                                         submittedTime={submittedTime}
-                                    />
+                                        isRequired={true} />
+                                </Col>
+                                <Col span={24}>
+                                    <TextEditorCommon
+                                        label={'Thành tích'}
+                                        id={"achievements"}
+                                        attribute={'achievements'}
+                                        setData={setDataTeacher}
+                                        dataAttribute={dataTeacher.achievements}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true} />
+                                </Col>
+                                <Col span={24}>
+                                    <TextEditorCommon
+                                        label={'Phong cách giảng dạy'}
+                                        id={"styleTeaching"}
+                                        attribute={'styleTeaching'}
+                                        setData={setDataTeacher}
+                                        dataAttribute={dataTeacher.styleTeaching}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true} />
                                 </Col>
                             </Row>
                         </Col>

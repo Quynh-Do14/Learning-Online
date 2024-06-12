@@ -76,7 +76,6 @@ const ListCoursePage = () => {
     return (
         <LayoutClient>
             <div className='flex flex-col gap-6'>
-
                 <div className='bg-[#FFF] px-3 py-5 rounded-[4px] flex flex-col gap-2'>
                     <p className='font-bold text-[13px] text-[#1e293bb3]'>Tìm kiếm khóa học</p>
                     <Row gutter={[10, 10]} align={"middle"} justify={"space-between"}>
@@ -100,6 +99,8 @@ const ListCoursePage = () => {
                 <Row gutter={[15, 15]}>
                     {
                         listCourse.map((it, index) => {
+                            console.log("it.courseImage?.fileCode", it.courseImage?.fileCode);
+
                             return (
                                 <Col
                                     xs={24} sm={12} md={8} lg={6}

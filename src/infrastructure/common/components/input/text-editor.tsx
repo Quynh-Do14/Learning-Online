@@ -1,6 +1,8 @@
 import Editor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useEffect, useState } from "react";
+import { validateFields } from "../../../helper/helper";
+import { MessageError } from "../controls/MessageError";
 
 type Props = {
     label: string,
@@ -9,6 +11,9 @@ type Props = {
     dataAttribute: any,
     setData: Function,
     isRequired: boolean,
+    validate: any,
+    setValidate: Function,
+    submittedTime: any,
 }
 const TextEditorCommon = (props: Props) => {
     const {
@@ -18,6 +23,9 @@ const TextEditorCommon = (props: Props) => {
         dataAttribute,
         setData,
         isRequired,
+        validate,
+        setValidate,
+        submittedTime
     } = props;
     // const editorConfiguration = {
     //     toolbar: {
@@ -62,7 +70,7 @@ const TextEditorCommon = (props: Props) => {
     //     },
     //     licenseKey: "",
     // };
-    
+
     const [value, setValue] = useState<string>("");
 
     useEffect(() => {
@@ -76,6 +84,20 @@ const TextEditorCommon = (props: Props) => {
             [attribute]: data || ''
         });
     }
+    const labelLower = label.toLowerCase();
+    const onBlur = (isImplicitChange = false) => {
+        let checkValidate
+        if (isRequired) {
+            validateFields(isImplicitChange, attribute, !value, setValidate, validate, !value ? `Vui lòng nhập ${labelLower}` : "");
+        }
+    };
+
+    useEffect(() => {
+        if (submittedTime != null) {
+            onBlur(true);
+        }
+    }, [submittedTime]);
+
     return (
         <div>
             <div className='mb-4 input-common'>
@@ -92,7 +114,9 @@ const TextEditorCommon = (props: Props) => {
                         // config={editorConfiguration}
                         id={id}
                         onChange={onChange}
+                        onBlur={() => onBlur(false)}
                     />
+                    <MessageError isError={validate[attribute]?.isError || false} message={validate[attribute]?.message || ""} />
                 </div>
             </div>
         </div>

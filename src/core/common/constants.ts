@@ -41,8 +41,8 @@ export default class Constants {
                 link: ROUTE_PATH.LIST_TEACHER,
             },
             {
-                label: "Tài liệu",
-                link: ROUTE_PATH.LIST_DOCUMENT,
+                label: "Bài giảng",
+                link: ROUTE_PATH.LIST_LESSON,
             }
         ]
     };
@@ -87,9 +87,24 @@ export default class Constants {
 
     static TabCourse = class {
         static List = [
-            { label: "Hình ảnh", value: 1 },
-            { label: "Mô tả khóa học", value: 2 },
-            { label: "Giáo viên giảng dạy", value: 3 },
+            { label: "Mô tả khóa học", value: 1 },
+            { label: "Giáo viên giảng dạy", value: 2 },
+            { label: "Đối tượng học sinh", value: 3 },
+            { label: "Kết quả", value: 4 },
+        ]
+    }
+    static TabLesson = class {
+        static List = [
+            { label: "Mô tả bài giảng", value: 1 },
+            { label: "Tài liệu bài giảng", value: 2 },
+        ]
+    }
+
+    static TabInfoTeacher = class {
+        static List = [
+            { label: "", value: 1 },
+            { label: "", value: 2 },
+            { label: "", value: 3 },
         ]
     }
 

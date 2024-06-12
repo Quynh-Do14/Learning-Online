@@ -13,6 +13,7 @@ import { CourseState } from '../../../core/atoms/course/courseState';
 import UploadVideo from '../../../infrastructure/common/components/input/upload-video';
 import TextEditorCommon from '../../../infrastructure/common/components/input/text-editor';
 import lessonService from '../../../infrastructure/repositories/lesson/service/lesson.service';
+import CheckBoxCommon from '../../../infrastructure/common/components/input/checkbox-common';
 
 const ViewLessonManagement = () => {
     const [validate, setValidate] = useState<any>({});
@@ -30,7 +31,7 @@ const ViewLessonManagement = () => {
     const navigate = useNavigate();
 
     const onBack = () => {
-        navigate(ROUTE_PATH.COURSE_MANAGEMENT)
+        navigate(ROUTE_PATH.LESSON_MANAGEMENT)
     };
     const setDataLesson = (data: any) => {
         Object.assign(dataLesson, { ...data });
@@ -74,7 +75,7 @@ const ViewLessonManagement = () => {
                 description: detailLesson.description,
                 lessionDocument: detailLesson.lessionDocument?.fileCode,
                 lessionVideo: detailLesson.lessionVideo?.fileCode,
-                publicDocument: false
+                publicDocument: detailLesson.publicDocument
             });
         };
     }, [detailLesson]);
@@ -90,7 +91,7 @@ const ViewLessonManagement = () => {
                     description: dataLesson.description,
                     lessionDocument: document || dataLesson.lessionDocument,
                     lessionVideo: video || dataLesson.lessionVideo,
-                    publicDocument: false
+                    publicDocument: dataLesson.publicDocument
                 },
                 onBack,
                 setLoading
@@ -102,7 +103,7 @@ const ViewLessonManagement = () => {
     };
 
     return (
-        <ManageLayout breadcrumb={"Quản lý bài giảng"} title={"Xem chi tiết"} redirect={ROUTE_PATH.CATEGORY_MANAGEMENT}>
+        <ManageLayout breadcrumb={"Quản lý bài giảng"} title={"Xem chi tiết"} redirect={ROUTE_PATH.LESSON_MANAGEMENT}>
             <div className='main-page h-full flex-1 overflow-auto bg-white px-4 py-8'>
                 <div className='bg-white scroll-auto'>
                     <Row>
@@ -138,18 +139,41 @@ const ViewLessonManagement = () => {
                                 </Col>
                                 <Col span={24}>
                                     <UploadVideo
-                                        label={"Tải video"}
-                                        attributeImg={dataLesson.video}
+                                        label={"Video"}
+                                        attributeFile={dataLesson.lessionVideo}
                                         setVideo={setVideo}
-                                        setImageUrl={() => { }}
+                                        setFileUrl={() => { }}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        attribute={'lessionVideo'}
                                     />
                                 </Col>
                                 <Col span={24}>
                                     <UploadVideo
-                                        label={"Tải tài liệu"}
-                                        attributeImg={dataLesson.document}
+                                        label={"Tài liệu"}
+                                        attributeFile={dataLesson.lessionDocument}
                                         setVideo={setDocument}
-                                        setImageUrl={() => { }}
+                                        setFileUrl={() => { }}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        attribute={'lessionDocument'}
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <CheckBoxCommon
+                                        label={'Tài liệu công khai'}
+                                        attribute={'publicDocument'}
+                                        setData={setDataLesson}
+                                        dataAttribute={dataLesson.publicDocument}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        disabled={false}
                                     />
                                 </Col>
                                 <Col span={24}>
@@ -159,6 +183,9 @@ const ViewLessonManagement = () => {
                                         attribute={'description'}
                                         setData={setDataLesson}
                                         dataAttribute={dataLesson.description}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                             </Row>

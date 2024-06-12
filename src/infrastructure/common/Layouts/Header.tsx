@@ -28,28 +28,32 @@ const HeaderClient = () => {
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
 
     const [, setProfileState] = useRecoilState(ProfileState);
-
+    const token = isTokenStoraged();
     const getProfileUser = async () => {
-        try {
-            await authService.profile(
-                () => { }
-            ).then((response) => {
-                if (response) {
-                    setDataProfile(response)
-                    setProfileState(
-                        {
-                            user: response,
-                        }
-                    )
-                }
-            })
-        } catch (error) {
-            console.error(error);
+        if (token) {
+            try {
+                await authService.profile(
+                    () => { }
+                ).then((response) => {
+                    if (response) {
+                        setDataProfile(response)
+                        setProfileState(
+                            {
+                                user: response,
+                            }
+                        )
+                    }
+                })
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
     useEffect(() => {
-        getProfileUser().then(() => { })
-    }, [dataLogined])
+        if (token) {
+            getProfileUser().then(() => { })
+        }
+    }, [dataLogined, token])
 
     const openModalLogout = () => {
         setIsOpenModalLogout(true);
@@ -106,10 +110,10 @@ const HeaderClient = () => {
                     &&
                     <Menu.Item className='info-admin' onClick={() => { navigate(ROUTE_PATH.MANAGE_LAYOUT) }}>
                         <div className='info-admin-title px-1 py-2 flex items-center hover:text-[#5e5eff]'>
-                            <svg className='mr-1' fill="#808080" width="20px" height="20px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M31,0H1A1,1,0,0,0,0,1V7.67a1,1,0,0,0,1,1H31a1,1,0,0,0,1-1V1A1,1,0,0,0,31,0ZM28.67,3.67H30V5H28.67ZM2,2H26.93a1,1,0,0,0-.26.67V6a1,1,0,0,0,.26.67H2Z" />
-                                <path d="M31,11.67H1a1,1,0,0,0-1,1v6.66a1,1,0,0,0,1,1H31a1,1,0,0,0,1-1V12.67A1,1,0,0,0,31,11.67ZM18.67,15.33H30v1.34H18.67ZM2,13.67H16.93a1,1,0,0,0-.26.66v3.34a1,1,0,0,0,.26.66H2Z" />
-                                <path d="M31,23.33H1a1,1,0,0,0-1,1V31a1,1,0,0,0,1,1H31a1,1,0,0,0,1-1V24.33A1,1,0,0,0,31,23.33ZM28.67,27H30v1.33H28.67ZM2,25.33H26.93a1,1,0,0,0-.26.67v3.33a1,1,0,0,0,.26.67H2Z" />
+                            <svg className='mr-1' width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 12C12 11.4477 12.4477 11 13 11H19C19.5523 11 20 11.4477 20 12V19C20 19.5523 19.5523 20 19 20H13C12.4477 20 12 19.5523 12 19V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                <path d="M4 5C4 4.44772 4.44772 4 5 4H8C8.55228 4 9 4.44772 9 5V19C9 19.5523 8.55228 20 8 20H5C4.44772 20 4 19.5523 4 19V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                <path d="M12 5C12 4.44772 12.4477 4 13 4H19C19.5523 4 20 4.44772 20 5V7C20 7.55228 19.5523 8 19 8H13C12.4477 8 12 7.55228 12 7V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                             </svg>
                             Quản trị viên
                         </div>
@@ -153,6 +157,26 @@ const HeaderClient = () => {
         )
     };
 
+    const conditionActive = (link: string) => {
+        if (location.pathname !== ROUTE_PATH.HOME_PAGE) {
+            if (location.pathname.includes(link)) {
+                return "active"
+            }
+            else {
+                return ""
+            }
+        }
+        else if (location.pathname === ROUTE_PATH.HOME_PAGE) {
+            if (location.pathname === link) {
+                return "active"
+            }
+            return ""
+        }
+
+        else {
+            return ""
+        }
+    }
     return (
         <div className="header-common header-layout-client">
             <Row justify="space-between">
@@ -166,7 +190,7 @@ const HeaderClient = () => {
                         <ul className="gap-3 flex m-auto">
                             {Constants.MenuClient.List.map((item: any, index: number) => {
                                 return (
-                                    <li key={index} className={`cursor-pointer text-[15px] text-[#1e293bb3] font-semibold capitalize ${location.pathname.includes(item.link) ? "active" : ""} `} onClick={() => navigate(item.link)} >
+                                    <li key={index} className={`cursor-pointer text-[15px] text-[#1e293bb3] font-semibold capitalize ${conditionActive(item.link)} `} onClick={() => navigate(item.link)} >
                                         <div >
                                             {item.label}
                                         </div>

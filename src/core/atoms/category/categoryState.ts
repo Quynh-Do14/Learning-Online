@@ -5,7 +5,7 @@ export const CategoryState = atom({
     default: {
         // isLoading: false,
         // uri: '',
-        data: <any>{},
+        data: <Array<any>>[],
 
     }, // default value (aka initial value)
 });

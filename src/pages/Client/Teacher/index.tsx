@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import LayoutClient from '../../../infrastructure/common/Layouts/Client-Layout'
 import { Col, Row, Tooltip } from 'antd'
-import { configGender } from '../../../infrastructure/helper/helper'
+import { configGender, configImageURL } from '../../../infrastructure/helper/helper'
 import teacherService from '../../../infrastructure/repositories/teacher/service/teacher.service'
 import { FullPageLoading } from '../../../infrastructure/common/components/controls/loading'
 import { PaginationCommon } from '../../../infrastructure/common/components/pagination/Pagination'
 import Constants from '../../../core/common/constants'
 import noAvatar from "../../../assets/images/no-avatar.png"
+import { useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '../../../core/common/appRouter'
 let timeout: any
 
 const ListTeacherPage = () => {
@@ -16,6 +18,7 @@ const ListTeacherPage = () => {
     const [pageSize, setPageSize] = useState<number>(10);
     const [searchText, setSearchText] = useState<string>("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onGetListTeacherAsync = async ({ name = "", size = pageSize, page = currentPage }) => {
         const param = {
@@ -61,6 +64,11 @@ const ListTeacherPage = () => {
         setCurrentPage(1)
         await onSearch(searchText, value, 1).then(_ => { });
     }
+
+    const onNavigate = (id: any) => {
+        navigate(`${(ROUTE_PATH.DETAIL_TEACHER).replace(`${Constants.UseParams.Id}`, "")}${id}`);
+    }
+
     return (
         <LayoutClient>
             <Row gutter={[15, 15]}>
@@ -72,10 +80,10 @@ const ListTeacherPage = () => {
                                 key={index}
                             >
                                 <div className='bg-[#fff] shadow-sm p-4 rounded-[4px] flex flex-col gap-4 border-[1px] border-[#d7d7d7] cursor-pointer h-full'
-                                    onClick={() => { }}
+                                    onClick={() => onNavigate(it.id)}
                                 >
                                     <div>
-                                        <img src={it.user?.avatar || noAvatar} alt="" className='w-full' />
+                                        <img src={configImageURL(it.image?.fileCode) || noAvatar} alt="" className='w-full' />
                                     </div>
                                     <Tooltip
                                         title={it.user?.name}

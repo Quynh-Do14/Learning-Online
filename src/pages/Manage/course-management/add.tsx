@@ -17,6 +17,7 @@ import { TeacherState } from '../../../core/atoms/teacher/teacherState';
 import { CategoryState } from '../../../core/atoms/category/categoryState';
 import InputSelectTeacherCommon from '../../../infrastructure/common/components/input/select-teacher-common';
 import UploadVideo from '../../../infrastructure/common/components/input/upload-video';
+import UploadFileCommon from '../../../infrastructure/common/components/input/upload-file';
 
 const AddCourseManagement = () => {
     const [validate, setValidate] = useState<any>({});
@@ -64,6 +65,7 @@ const AddCourseManagement = () => {
                 courseVideo: video,
                 name: dataCourse.name,
                 category: dataCourse.category,
+                teacher: dataCourse.teacher,
                 cost: dataCourse.cost,
                 description: dataCourse.description,
                 result: dataCourse.result,
@@ -77,7 +79,8 @@ const AddCourseManagement = () => {
             WarningMessage("Nhập thiếu thông tin", "Vui lòng nhập đầy đủ thông tin")
         };
     };
-
+    console.log("video",video);
+    
     return (
         <ManageLayout breadcrumb={"Quản lý khóa học"} title={"Thêm khóa học"} redirect={ROUTE_PATH.COURSE_MANAGEMENT}>
             <div className='main-page h-full flex-1 overflow-auto bg-white px-4 py-8'>
@@ -88,10 +91,16 @@ const AddCourseManagement = () => {
                                 <div>
                                     <div className='legend-title'>Thêm mới ảnh</div>
                                     <UploadImage
-                                        attributeImg={dataCourse.avatar}
+                                        attributeImg={dataCourse.courseImage}
                                         imageUrl={imageUrl}
                                         setAvatar={setAvatar}
                                         setImageUrl={setImageUrl}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        attribute={'courseImage'}
+                                        label={'Ảnh'}
                                     />
                                 </div>
                             </div>
@@ -154,11 +163,16 @@ const AddCourseManagement = () => {
                                     />
                                 </Col>
                                 <Col span={24}>
-                                    <UploadVideo
-                                        label={"Tải video"}
-                                        attributeImg={dataCourse.video}
+                                    <UploadFileCommon
+                                        label={"Video"}
+                                        attributeFile={dataCourse.video}
                                         setVideo={setVideo}
-                                        setImageUrl={setVideoUrl}
+                                        setFileUrl={setVideoUrl}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        attribute={'courseVideo'}
                                     />
                                 </Col>
                                 <Col span={24}>
@@ -168,6 +182,9 @@ const AddCourseManagement = () => {
                                         attribute={'description'}
                                         setData={setDataCourse}
                                         dataAttribute={dataCourse.description}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                                 <Col span={24}>
@@ -177,6 +194,9 @@ const AddCourseManagement = () => {
                                         attribute={'result'}
                                         setData={setDataCourse}
                                         dataAttribute={dataCourse.result}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                                 <Col span={24}>
@@ -186,6 +206,9 @@ const AddCourseManagement = () => {
                                         attribute={'object'}
                                         setData={setDataCourse}
                                         dataAttribute={dataCourse.object}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                             </Row>

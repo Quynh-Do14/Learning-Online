@@ -6,10 +6,16 @@ export const ROUTE_PATH = {
     REGISTER: `${PREFIX}/register`,
     ///Client
     HOME_PAGE: `${PREFIX}/`,
-    LIST_COURSE: `${PREFIX}/list-course`,
-    DETAIL_COURSE: `${PREFIX}/detail-course/:id`,
-    LIST_TEACHER: `${PREFIX}/list-teacher`,
-    LIST_DOCUMENT: `${PREFIX}/list-document`,
+    LIST_COURSE: `${PREFIX}/course-public`,
+    DETAIL_COURSE: `${PREFIX}/course-public/view/:id`,
+    LIST_TEACHER: `${PREFIX}/teacher-public`,
+    DETAIL_TEACHER: `${PREFIX}/teacher-public/view/:id`,
+    
+    LIST_LESSON: `${PREFIX}/lesson-public`,
+    DETAIL_LESSON: `${PREFIX}/lesson-public/view/:id`,
+
+    LIST_DOCUMENT: `${PREFIX}/document-public`,
+    DETAIL_DOCUMENT: `${PREFIX}/document-public/view/:id`,
 
     ///Management
     MANAGE_LAYOUT: `${PREFIX}/manage-layout`,

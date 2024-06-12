@@ -24,7 +24,7 @@ const AddCategoryManagement = () => {
     const navigate = useNavigate();
 
     const onBack = () => {
-        navigate(ROUTE_PATH.COURSE_MANAGEMENT)
+        navigate(ROUTE_PATH.CATEGORY_MANAGEMENT)
     };
     const setDataCategory = (data: any) => {
         Object.assign(dataCategory, { ...data });

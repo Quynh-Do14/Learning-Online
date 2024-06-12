@@ -35,7 +35,7 @@ const InputTextCommon = (props: Props) => {
             [attribute]: e.target.value || ''
         });
     };
-    let labelLower = label?.toLowerCase();
+    const labelLower = label?.toLowerCase();
     const onBlur = (isImplicitChange = false) => {
         let checkValidate
         if (isRequired) {

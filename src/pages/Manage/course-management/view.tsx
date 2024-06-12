@@ -79,8 +79,8 @@ const ViewCourseManagement = () => {
                 courseImage: detailCourse.courseImage?.fileCode,
                 courseVideo: detailCourse.courseVideo?.fileCode,
                 name: detailCourse.name,
-                category: detailCourse.category?.name,
-                teacher: detailCourse.teacher?.user?.name,
+                category: detailCourse.category?.id,
+                teacher: detailCourse.teacher?.id,
                 cost: detailCourse.cost,
                 description: detailCourse.description,
                 result: detailCourse.result,
@@ -88,7 +88,8 @@ const ViewCourseManagement = () => {
             });
         };
     }, [detailCourse]);
-
+    console.log("detailCourse",detailCourse);
+    
     const onUpdateCourseAsync = async () => {
         await setSubmittedTime(Date.now());
         if (isValidData()) {
@@ -99,6 +100,7 @@ const ViewCourseManagement = () => {
                     courseVideo: video || dataCourse.courseImage,
                     name: dataCourse.name,
                     category: dataCourse.category,
+                    teacher: dataCourse.teacher,
                     cost: dataCourse.cost,
                     description: dataCourse.description,
                     result: dataCourse.result,
@@ -126,6 +128,12 @@ const ViewCourseManagement = () => {
                                 imageUrl={imageUrl}
                                 setAvatar={setAvatar}
                                 setImageUrl={setImageUrl}
+                                validate={validate}
+                                setValidate={setValidate}
+                                submittedTime={submittedTime}
+                                isRequired={true}
+                                attribute={'courseImage'}
+                                label={'Ảnh'}
                             />
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={16} xl={18} xxl={19} className='border-add'>
@@ -187,9 +195,14 @@ const ViewCourseManagement = () => {
                                 <Col span={24}>
                                     <UploadVideo
                                         label={"Tải video"}
-                                        attributeImg={dataCourse.video}
+                                        attributeFile={dataCourse.courseVideo}
                                         setVideo={setVideo}
-                                        setImageUrl={setVideoUrl}
+                                        setFileUrl={setVideoUrl}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        attribute={'courseVideo'}
                                     />
                                 </Col>
                                 <Col span={24}>
@@ -199,6 +212,9 @@ const ViewCourseManagement = () => {
                                         attribute={'description'}
                                         setData={setDataCourse}
                                         dataAttribute={dataCourse.description}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                                 <Col span={24}>
@@ -208,6 +224,9 @@ const ViewCourseManagement = () => {
                                         attribute={'result'}
                                         setData={setDataCourse}
                                         dataAttribute={dataCourse.result}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                                 <Col span={24}>
@@ -217,6 +236,9 @@ const ViewCourseManagement = () => {
                                         attribute={'object'}
                                         setData={setDataCourse}
                                         dataAttribute={dataCourse.object}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                             </Row>

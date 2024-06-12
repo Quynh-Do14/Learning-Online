@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import LayoutClient from '../../../infrastructure/common/Layouts/Client-Layout'
-import { Col, Row, Tooltip } from 'antd'
-import { configImageURL, formatCurrencyVND } from '../../../infrastructure/helper/helper'
+import { Col, Input, Row, Tooltip } from 'antd'
+import { configGender, configImageURL, convertDateShow, formatCurrencyVND } from '../../../infrastructure/helper/helper'
 import { ButtonCommon } from '../../../infrastructure/common/components/button/button-common'
 import Constants from '../../../core/common/constants'
 import { BreadcrumbCommon } from '../../../infrastructure/common/components/controls/Breadcumb'
@@ -10,17 +10,34 @@ import courseService from '../../../infrastructure/repositories/course/service/c
 import { FullPageLoading } from '../../../infrastructure/common/components/controls/loading'
 import { useParams } from 'react-router-dom'
 import DialogConfirmCommon from '../../../infrastructure/common/components/modal/dialogConfirm'
+import { SendOutlined } from '@ant-design/icons'
+import { isTokenStoraged } from '../../../infrastructure/utils/storage'
+import commentService from '../../../infrastructure/repositories/comment/service/comment.service'
+import InfoCourse from './components/info'
+import DescriptionCourse from './components/description'
+import LessonCourse from './components/lesson'
+import CommentCourse from './components/comment'
 
 const DetailCourse = () => {
-    const [tab, setTab] = useState(2);
+    const [tab, setTab] = useState(1);
     const [loading, setLoading] = useState<boolean>(false);
     const [detailCourse, setDetailCourse] = useState<any>({});
     const [detailTeacher, setDetailTeacher] = useState<any>({});
     const [detailSuggestion, setDetailSuggestion] = useState<Array<any>>([]);
+    const [listComment, setListComment] = useState<Array<any>>([]);
+    const [listLesson, setListLesson] = useState<Array<any>>([]);
+    const [total, setTotal] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(Constants.PaginationClientConfigs.Size);
+    const [idReply, setIdReply] = useState<number>(0);
+    const [replyChange, setReplyChange] = useState("");
+    const [commentChange, setCommentChange] = useState("");
+
     const [videoURL, setVideoURL] = useState<string>("");
     const [isOpenModalBuyCourse, setIsOpenModalBuyCourse] = useState<boolean>(false);
 
     const param = useParams();
+    const token = isTokenStoraged();
 
     const onGetCourseByIdAsync = async () => {
         try {
@@ -28,14 +45,17 @@ const DetailCourse = () => {
                 Number(param.id),
                 setLoading
             ).then((res) => {
-                setDetailCourse(res?.course)
-                setVideoURL(res.course?.courseVideo?.fileCode)
-                setDetailSuggestion(res?.suggestions)
-                setDetailTeacher(res.course?.teacher)
+                setDetailCourse(res?.course);
+                setVideoURL(res.course?.courseVideo?.fileCode);
+                setDetailSuggestion(res?.suggestions);
+                setDetailTeacher(res.course?.teacher);
+                setListComment(res?.comments?.content);
+                setTotal(res?.comments?.totalElements);
+                setListLesson(res?.lessions)
             })
         }
         catch (error) {
-            console.error(error)
+            console.error(error);
         }
     };
     useEffect(() => {
@@ -63,8 +83,61 @@ const DetailCourse = () => {
         }
         catch (error) {
             console.error(error)
+        };
+    };
+
+    const onOpenReply = (id: number) => {
+        setIdReply(id);
+        setReplyChange("");
+    };
+
+    const onCommentAsync = async () => {
+        if (commentChange && token) {
+            try {
+                await commentService.addComment(
+                    {
+                        content: commentChange,
+                        course: {
+                            id: Number(param.id)
+                        }
+                    },
+                    onGetCourseByIdAsync,
+                    setLoading
+                ).then((response) => {
+                    if (response) {
+                        setCommentChange("")
+                    }
+                })
+            }
+            catch (error) {
+                console.error(error)
+            };
         }
-    }
+    };
+
+    const onReplyAsync = async () => {
+        if (replyChange && token) {
+            try {
+                await commentService.addComment(
+                    {
+                        content: replyChange,
+                        parentComment: {
+                            id: idReply
+                        }
+                    },
+                    onGetCourseByIdAsync,
+                    setLoading
+                ).then((response) => {
+                    if (response) {
+                        setReplyChange("")
+                    }
+                })
+            }
+            catch (error) {
+                console.error(error)
+            };
+        }
+    };
 
     return (
         <LayoutClient>
@@ -74,43 +147,12 @@ const DetailCourse = () => {
                     breadcrumb={'Trang chủ'}
                     redirect={ROUTE_PATH.HOME_PAGE}
                 />
-                <Row gutter={[25, 20]}>
-                    <Col span={14}>
-                        {
-                            videoURL?.length
-                            &&
-                            <video style={{ width: "100%", height: "100%" }} controls>
-                                <source
-                                    src={configImageURL(videoURL)}
-                                    type="video/mp4"
-                                />
-                            </video>
-                        }
-
-                    </Col>
-                    <Col span={10}>
-                        <div className='flex flex-col gap-2'>
-                            <p className='text-[24px] font-semibold text-[#2a70b8]'>{detailCourse.name} </p>
-                            <p className='text-[14px] font-semibold text-[#1e293bb3]'>(Còn lại {detailCourse.remain} khóa) </p>
-                            <div className='flex gap-1 items-center text-[16px] font-semibold'>
-                                <p className='text-[#1e293bb3]'>Giáo viên:</p>
-                                <p className='text-[#2a70b8]'>{detailTeacher?.user?.name} </p>
-                            </div>
-                            <div className='flex gap-1 items-center text-[24px] font-semibold text-[#d63939]'>
-                                <p>Giá:</p>
-                                <p>{formatCurrencyVND(String(detailCourse.cost))} </p>
-                                <p>/</p>
-                                <p>khóa</p>
-                            </div>
-                            <div className='flex'>
-                                <ButtonCommon
-                                    classColor={'orange'}
-                                    onClick={openModalBuyCourse}
-                                    title={'Mua ngay'} />
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
+                <InfoCourse
+                    videoURL={videoURL}
+                    detailCourse={detailCourse}
+                    detailTeacher={detailTeacher}
+                    openModalBuyCourse={openModalBuyCourse}
+                />
                 <Row gutter={[25, 10]} className='border-b-[1px] border-b-[#1e293b54]'>
                     {
                         Constants.TabCourse.List.map((it, index) => {
@@ -122,103 +164,28 @@ const DetailCourse = () => {
                         })
                     }
                 </Row>
-                <Row gutter={[25, 20]}>
-                    <Col span={14}>
-                        {
-                            tab == 1
-                                ?
-                                <img src={configImageURL(detailCourse.courseImage?.fileCode)} alt="" className='w-full' />
-                                :
-                                tab == 2
-                                    ?
-                                    // <div className='flex flex-col gap-4'>
-                                    //     <div className='flex flex-col gap-2'>
-                                    //         <p className='text-[14px] font-semibold text-[#1e293be3]'>Hệ thống bài giảng của khóa học:</p>
-                                    //         <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
-                                    //             <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
-                                    //             <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
-                                    //             <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
-                                    //         </ul>
-                                    //     </div>
-                                    //     <div className='flex flex-col gap-2'>
-                                    //         <p className='text-[14px] font-semibold text-[#1e293be3]'>Để việc học tập đạt hiệu quả cao, các con cần tuân thủ những điều sau:</p>
-                                    //         <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
-                                    //             <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
-                                    //             <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
-                                    //             <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
-                                    //         </ul>
-                                    //     </div>
-                                    //     <div className='flex flex-col gap-2'>
-                                    //         <p className='text-[14px] font-semibold text-[#1e293be3]'>Để việc học tập đạt hiệu quả cao, các con cần tuân thủ những điều sau:</p>
-                                    //         <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
-                                    //             <li>Các bài giảng được chia thành 11 chuyên đề tổng hợp, tập trung ở 3 phân môn "Chính tả", "Tập làm văn", "Luyện từ và câu".</li>
-                                    //             <li>Tóm lược kiến thức cần nhớ, mở rộng và nâng cao kiến thức so với chương trình sách giáo khoa.</li>
-                                    //             <li>Hướng dẫn phương pháp làm bài hiệu quả thông qua các dạng bài cụ thể.</li>
-                                    //         </ul>
-                                    //     </div>
-                                    // </div>
-                                    <div className='flex flex-col gap-4'>
-                                        <div className='flex flex-col gap-2'>
-                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Mô tả khóa học:</p>
-                                            <div dangerouslySetInnerHTML={{ __html: detailCourse.description }} />
-                                        </div>
-                                        <div className='flex flex-col gap-2'>
-                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Đối tượng hướng tới:</p>
-                                            <div dangerouslySetInnerHTML={{ __html: detailCourse.object }} />
-                                        </div>
-                                        <div className='flex flex-col gap-2'>
-                                            <p className='text-[14px] font-semibold text-[#1e293be3]'>Kêt quả đạt được:</p>
-                                            <div dangerouslySetInnerHTML={{ __html: detailCourse.result }} />
-                                        </div>
-                                    </div>
-                                    :
-                                    <div>
-                                        <div className='flex flex-col gap-4'>
-                                            <div className='flex flex-col gap-2'>
-                                                <p className='text-[14px] font-semibold text-[#1e293be3]'>Thông tin giáo viên</p>
-                                                <ul className='list-disc text-[14px] text-[#1e293bb3] pl-4'>
-                                                    <li>Giáo viên: {detailTeacher?.user?.name}</li>
-                                                    <li>{detailTeacher?.discipline?.name}</li>
-                                                    <li>{detailTeacher?.level}</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                        }
-                    </Col>
-                    <Col span={10} className='flex flex-col gap-2'>
-                        <p className='text-[14px] font-semibold text-[#1e293be3]'>Khóa học liên quan</p>
-                        {
-                            detailSuggestion.map((it, index) => {
-                                return (
-                                    <div key={index} className='shadow-md p-2 rounded-[4px]'>
-                                        <Row gutter={[15, 15]}>
-                                            <Col span={12}>
-                                                <div className='w-full h-[50%]'>
-                                                    <img src={configImageURL(it.courseImage?.fileCode)} alt="" className='w-full' />
-                                                </div>
-                                            </Col>
-                                            <Col span={12}>
-                                                <div>
-                                                    <Tooltip
-                                                        title={it.name}
-                                                        color='#1e293bb3'
-                                                    >
-                                                        <div className='text-[13px] text-[#2a70b8] font-semibold hover:text-[#c46f20] hover:underline transition duration-200'>{it.name}</div>
-                                                    </Tooltip>
-                                                    <div className='flex gap-1 items-center text-[14px] font-semibold text-[#d63939] '>
-                                                        <p>Giá:</p>
-                                                        <p>{formatCurrencyVND(String(it.cost))} </p>
-                                                    </div>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                )
-                            })
-                        }
-                    </Col>
-                </Row>
+
+                <DescriptionCourse
+                    tab={tab}
+                    detailCourse={detailCourse}
+                    detailTeacher={detailTeacher}
+                    detailSuggestion={detailSuggestion}
+                />
+
+                <LessonCourse
+                    listLesson={listLesson}
+                />
+                <CommentCourse
+                    commentChange={commentChange}
+                    setCommentChange={setCommentChange}
+                    onCommentAsync={onCommentAsync}
+                    listComment={listComment}
+                    replyChange={replyChange}
+                    setReplyChange={setReplyChange}
+                    onReplyAsync={onReplyAsync}
+                    idReply={idReply}
+                    onOpenReply={onOpenReply}
+                />
             </div>
             <DialogConfirmCommon
                 message={"Bạn có muốn mua khóa học này?"}

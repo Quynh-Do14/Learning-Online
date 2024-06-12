@@ -64,7 +64,7 @@ const InputSelectTeacherCommon = (props: Props) => {
             validateBlur(true);
         }
     }, [submittedTime]);
-
+    
     return (
         <div>
             <div className='mb-4 input-common'>
@@ -89,11 +89,11 @@ const InputSelectTeacherCommon = (props: Props) => {
                         className={`${validate[attribute]?.isError ? "input-error" : ""} w-full text-left`}
                     >
                         {
-                            dataTeacherState && dataTeacherState?.length && dataTeacherState?.map((item: any, index: number) => {
+                            dataTeacherState && dataTeacherState?.length && dataTeacherState?.map((item, index) => {
                                 return (
                                     <Select.Option
                                         key={index}
-                                        value={String(item.id)}
+                                        value={item.id}
                                         title={item.user?.name}
                                     >
                                         {item.user?.name}

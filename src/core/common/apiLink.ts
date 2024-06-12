@@ -43,5 +43,7 @@ export class Endpoint {
         static Update = "/disciplines/admin/update"
         static Delete = "/disciplines/admin/delete"
     }
-
+    static Comment = class {
+        static Add = "/comments/createComment"
+    }
 }

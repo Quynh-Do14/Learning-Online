@@ -145,7 +145,7 @@
 
 .main-layout .sider li.ant-menu-item.menu-title.active {
     border-radius: 0px;
-    background: #ffffff;
+    background: #0d9e6d14;
     color: #0d9e6d;
     border-left: 5px solid #0d9e6d;
     font-size: 15px;
@@ -162,8 +162,9 @@
 }
 
 .main-layout .sider li.ant-menu-item.menu-title.active:hover {
-    background: #0d9e6e30;
-    color: #6b7280;
+    background: #0d9e6ee3;
+    color: #ffffff;
+    border-left: 5px solid #ffffff;
 }
 
 .main-layout .content .header-page .filter-page {

@@ -62,7 +62,7 @@ const AddLessonManagement = () => {
                 description: dataLesson.description,
                 lessionDocument: document,
                 lessionVideo: video,
-                publicDocument: false
+                publicDocument: dataLesson.publicDocument
             },
                 onBack,
                 setLoading
@@ -110,18 +110,28 @@ const AddLessonManagement = () => {
                                 </Col>
                                 <Col span={24}>
                                     <UploadVideo
-                                        label={"Tải video"}
-                                        attributeImg={dataLesson.video}
+                                        label={"Video"}
+                                        attributeFile={dataLesson.lessionVideo}
                                         setVideo={setVideo}
-                                        setImageUrl={() => { }}
+                                        setFileUrl={() => { }}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        attribute={'lessionVideo'}
                                     />
                                 </Col>
                                 <Col span={24}>
                                     <UploadVideo
-                                        label={"Tải tài liệu"}
-                                        attributeImg={dataLesson.document}
+                                        label={"Tài liệu"}
+                                        attributeFile={dataLesson.lessionDocument}
                                         setVideo={setDocument}
-                                        setImageUrl={() => { }}
+                                        setFileUrl={() => { }}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        attribute={'lessionDocument'}
                                     />
                                 </Col>
                                 <Col span={24}>
@@ -131,6 +141,9 @@ const AddLessonManagement = () => {
                                         attribute={'description'}
                                         setData={setDataLesson}
                                         dataAttribute={dataLesson.description}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
                                         isRequired={true} />
                                 </Col>
                             </Row>

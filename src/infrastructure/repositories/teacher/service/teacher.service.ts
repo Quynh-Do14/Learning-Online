@@ -46,7 +46,7 @@ class TeacherService {
         setLoading(true)
         try {
             return await RequestService
-                .post(Endpoint.Teacher.Add,
+                .postForm(Endpoint.Teacher.Add,
                     data
                 )
                 .then(response => {
@@ -69,7 +69,7 @@ class TeacherService {
         setLoading(true)
         try {
             return await RequestService
-                .put(`${Endpoint.Teacher.Update}/${id}`,
+                .putForm(`${Endpoint.Teacher.Update}/${id}`,
                     data
                 )
                 .then(response => {

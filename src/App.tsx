@@ -9,8 +9,9 @@ import { isTokenStoraged } from "./infrastructure/utils/storage";
 
 function App() {
   const [, setProfileState] = useRecoilState(ProfileState);
+  const token = isTokenStoraged();
   const getProfileUser = async () => {
-    if (isTokenStoraged()) {
+    if (token) {
       try {
         await authService.profile(
           () => { }
@@ -29,12 +30,12 @@ function App() {
     }
 
   }
-  
+
   useEffect(() => {
-    if (isTokenStoraged()) {
-        getProfileUser().then(() => { });
+    if (token) {
+      getProfileUser().then(() => { })
     }
-}, [isTokenStoraged()]);
+  }, [token]);
 
   return (
     <div className="App">

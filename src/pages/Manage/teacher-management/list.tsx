@@ -149,21 +149,6 @@ const ListTeacherManagement = () => {
                     <Column
                         title={
                             <TitleTableCommon
-                                title="Tên"
-                                width={'200px'}
-                            />
-                        }
-                        key={"user"}
-                        dataIndex={"user"}
-                        render={(val) => {
-                            return (
-                                <div>{val?.name}</div>
-                            )
-                        }}
-                    />
-                    <Column
-                        title={
-                            <TitleTableCommon
                                 title="Họ và tên"
                                 width={'200px'}
                             />
@@ -215,11 +200,6 @@ const ListTeacherManagement = () => {
                         }
                         key={"discipline"}
                         dataIndex={"discipline"}
-                        render={(val) => {
-                            return (
-                                <div>{val?.name}</div>
-                            )
-                        }}
                     />
                     <Column
                         title={

@@ -1,13 +1,20 @@
 import { Upload } from 'antd';
 import { useEffect, useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { configImageURL } from '../../../helper/helper';
+import { configImageURL, validateFields } from '../../../helper/helper';
+import { MessageError } from '../controls/MessageError';
 
 type Props = {
+    label: string,
     attributeImg: any,
     setAvatar: Function,
     imageUrl: any,
-    setImageUrl: Function
+    setImageUrl: Function,
+    validate: any,
+    setValidate: Function,
+    submittedTime: any,
+    attribute: string,
+    isRequired: boolean,
 }
 
 const getBase64 = (img: any, callback: any) => {
@@ -16,7 +23,19 @@ const getBase64 = (img: any, callback: any) => {
     reader.readAsDataURL(img);
 };
 function UploadImage(props: Props) {
-    const { attributeImg, setAvatar, imageUrl, setImageUrl } = props;
+    const {
+        label,
+        attributeImg,
+        setAvatar,
+        imageUrl,
+        setImageUrl,
+        attribute,
+        submittedTime,
+        isRequired,
+        setValidate,
+        validate,
+    } = props;
+
     const inputRef = useRef(null);
     const handleChange = (info: any) => {
         if (info.file) {
@@ -27,8 +46,27 @@ function UploadImage(props: Props) {
         }
     };
     useEffect(() => {
-        setImageUrl(attributeImg)
+        if (attributeImg) {
+            setImageUrl(configImageURL(attributeImg))
+        }
+        else {
+            setImageUrl(attributeImg)
+        }
     }, [attributeImg])
+
+    const labelLower = label?.toLowerCase();
+
+    const onBlur = (isImplicitChange = false) => {
+        if (isRequired) {
+            validateFields(isImplicitChange, attribute, !imageUrl, setValidate, validate, !imageUrl ? `Vui lòng tải ${labelLower}` : "");
+        }
+    };
+
+    useEffect(() => {
+        if (submittedTime != null) {
+            onBlur(true);
+        }
+    }, [submittedTime]);
 
     return (
         <div className="mb-[1rem] relative upload-common">
@@ -56,13 +94,14 @@ function UploadImage(props: Props) {
                 id='upload'
             >
                 {imageUrl ? (
-                    <img src={configImageURL(imageUrl)} alt="avatar" className="w-full h-full rounded-full" />
+                    <img src={imageUrl} alt="avatar" className="w-full h-full rounded-full" />
                 ) : (
                     <div ref={inputRef}>
                         <PlusOutlined />
                     </div>
                 )}
             </Upload>
+            <MessageError isError={validate[attribute]?.isError || false} message={validate[attribute]?.message || ""} />
         </div>
     );
 }

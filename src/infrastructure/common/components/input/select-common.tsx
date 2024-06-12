@@ -92,7 +92,7 @@ const InputSelectCommon = (props: Props) => {
                                 return (
                                     <Select.Option
                                         key={index}
-                                        value={String(item.value)}
+                                        value={item.value}
                                         title={item.label}
                                     >
                                         {item.label}

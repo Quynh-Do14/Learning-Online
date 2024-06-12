@@ -10,7 +10,7 @@ import { ROUTE_PATH } from '../../../core/common/appRouter'
 import { useNavigate } from 'react-router-dom'
 
 let timeout: any
-const DocumentPage = () => {
+const LessonPage = () => {
     const [listLesson, setListLesson] = useState<Array<any>>([])
     const [total, setTotal] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -65,7 +65,7 @@ const DocumentPage = () => {
     }
 
     const onNavigate = (id: any) => {
-        navigate(`${(ROUTE_PATH.DETAIL_DOCUMENT).replace(`${Constants.UseParams.Id}`, "")}${id}`);
+        navigate(`${(ROUTE_PATH.DETAIL_LESSON).replace(`${Constants.UseParams.Id}`, "")}${id}`);
     }
 
     return (
@@ -115,4 +115,4 @@ const DocumentPage = () => {
     )
 }
 
-export default DocumentPage
+export default LessonPage

@@ -18,6 +18,10 @@ import ViewTeacherManagement from "../../pages/Manage/teacher-management/view";
 import ListLessonManagement from "../../pages/Manage/lesson/list";
 import AddLessonManagement from "../../pages/Manage/lesson/add";
 import ViewLessonManagement from "../../pages/Manage/lesson/view";
+import DetailTeacherPage from "../../pages/Client/Teacher/detail";
+import DetailDocumentPage from "../../pages/Client/Lesson/detail";
+import LessonPage from "../../pages/Client/Lesson";
+import DetailLessonPage from "../../pages/Client/Lesson/detail";
 
 export const privateRoutes = [
 
@@ -42,10 +46,30 @@ export const privateRoutes = [
         private: false,
     },
     {
-        path: ROUTE_PATH.LIST_DOCUMENT,
-        component: DocumentPage,
+        path: ROUTE_PATH.DETAIL_TEACHER,
+        component: DetailTeacherPage,
         private: false,
     },
+    {
+        path: ROUTE_PATH.LIST_LESSON,
+        component: LessonPage,
+        private: false,
+    },
+    {
+        path: ROUTE_PATH.DETAIL_LESSON,
+        component: DetailLessonPage,
+        private: false,
+    },
+    // {
+    //     path: ROUTE_PATH.LIST_DOCUMENT,
+    //     component: DocumentPage,
+    //     private: false,
+    // },
+    // {
+    //     path: ROUTE_PATH.DETAIL_DOCUMENT,
+    //     component: DetailDocumentPage,
+    //     private: false,
+    // },
     // {
     //     path: ROUTE_PATH.REGISTER,
     //     component: RegisterPage,

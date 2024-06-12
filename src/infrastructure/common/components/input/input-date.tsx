@@ -4,7 +4,7 @@ import { Col, DatePicker, Row } from 'antd';
 import moment from 'moment';
 import { MessageError } from '../controls/MessageError';
 import { validateFields } from '../../../helper/helper';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 type Props = {
     label: string,
     attribute: string,
@@ -34,7 +34,7 @@ const InputDateCommon = (props: Props) => {
         showTime = false,
         showHour = false,
     } = props;
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<Dayjs | null>(null);
 
     const disabledDate = (current: any) => {
         if (disabledToDate == true) {
@@ -60,12 +60,16 @@ const InputDateCommon = (props: Props) => {
         //     validateFields(isImplicitChange, attribute, !value, setValidate, validate, !value ? `Vui lòng nhập ${labelLower}` : "");
         // }
     }
-    // useEffect(() => {
-    //     if (dataAttribute) {
-    //         setValue(dayjs(dataAttribute, "DD-MM-YYYY HH:mm:ss") || null);
-    //     }
-    // }, [dataAttribute]);
-
+    useEffect(() => {
+        if (dataAttribute) {
+          const parsedDate = dayjs(dataAttribute);
+          if (parsedDate.isValid()) {
+            setValue(parsedDate);
+          } else {
+            console.error('Invalid date format:', dataAttribute);
+          }
+        }
+      }, [dataAttribute]);
     useEffect(() => {
         if (submittedTime != null) {
             onBlur(true);

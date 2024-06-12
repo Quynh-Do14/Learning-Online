@@ -1,30 +1,30 @@
 import { Col, Row, Tooltip } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CarouselCommon from '../../../../infrastructure/common/components/controls/Carousel'
-const cate = [
-    {
-        name: "Đại học - Cao đẳng"
-    },
-    {
-        name: "Bổ trợ Phương pháp - Kĩ năng"
-    },
-    {
-        name: "Bồi dưỡng học sinh giỏi"
-    },
-    {
-        name: "LUYỆN THI ĐẠI HỌC"
-    },
-    {
-        name: "Lớp 10 - Lớp 11 - Lớp 12"
-    },
-    {
-        name: "Lớp 6 - Lớp 7 - Lớp 8 - Lớp 9"
-    },
-    {
-        name: "Lớp 1 - Lớp 2 - Lớp 3 - Lớp 4 - Lớp 5"
-    },
-]
+import categoryService from '../../../../infrastructure/repositories/category/service/category.service'
+
 const BannerHomePage = () => {
+    const [dataCategory, setDataCategory] = useState<Array<any>>([]);
+
+    const getCategoryAsync = async () => {
+        try {
+            await categoryService.getCategory(
+                {
+                    size: 6
+                },
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setDataCategory(response.content)
+                }
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        getCategoryAsync().then(() => { })
+    }, [])
     return (
         <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={8} lg={8} xl={7}>
@@ -42,7 +42,7 @@ const BannerHomePage = () => {
                         </div>
                     </div>
                     {
-                        cate.map((it, index) => {
+                        dataCategory.map((it, index) => {
                             return (
                                 <div
                                     key={index}

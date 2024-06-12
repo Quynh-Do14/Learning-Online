@@ -5,30 +5,36 @@ import FooterClient from "./Footer";
 import HeaderClient from "./Header";
 import { useRecoilState } from "recoil";
 import { ProfileState } from "../../../core/atoms/profile/profileState";
+import { isTokenStoraged } from "../../utils/storage";
 const LayoutClient = ({ ...props }: any) => {
     const [dataProfile, setDataProfile] = useState<any>({});
     const [, setProfileState] = useRecoilState(ProfileState);
+    const token = isTokenStoraged();
     const getProfileUser = async () => {
-        try {
-            await authService.profile(
-                () => { }
-            ).then((response) => {
-                if (response) {
-                    setDataProfile(response)
-                    setProfileState(
-                        {
-                            user: response,
-                        }
-                    )
-                }
-            })
-        } catch (error) {
-            console.error(error);
+        if (token) {
+            try {
+                await authService.profile(
+                    () => { }
+                ).then((response) => {
+                    if (response) {
+                        setDataProfile(response)
+                        setProfileState(
+                            {
+                                user: response,
+                            }
+                        )
+                    }
+                })
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
     useEffect(() => {
-        getProfileUser().then(() => { })
-    }, [])
+        if (token) {
+            getProfileUser().then(() => { })
+        }
+    }, [token])
     return (
         <div className="main-layout-client">
             <HeaderClient />

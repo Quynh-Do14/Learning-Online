@@ -39,6 +39,7 @@ const ManageLayout = ({ ...props }: any) => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const token = isTokenStoraged();
 
     const openModalLogout = () => {
         setIsOpenModalLogout(true);
@@ -63,7 +64,7 @@ const ManageLayout = ({ ...props }: any) => {
     }
 
     const getProfileUser = async () => {
-        if (isTokenStoraged()) {
+        if (token) {
             try {
                 await authService.profile(
                     () => { }
@@ -84,10 +85,10 @@ const ManageLayout = ({ ...props }: any) => {
     }
 
     useEffect(() => {
-        if (isTokenStoraged()) {
+        if (token) {
             getProfileUser().then(() => { });
         }
-    }, [isTokenStoraged()]);
+    }, [token]);
 
     const getTeacherAsync = async () => {
         try {
