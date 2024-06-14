@@ -1,7 +1,9 @@
 import { Col, Row, Tooltip } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import CarouselCommon from '../../../../infrastructure/common/components/controls/Carousel'
 import categoryService from '../../../../infrastructure/repositories/category/service/category.service'
+import { Link } from 'react-router-dom'
+import { ROUTE_PATH } from '../../../../core/common/appRouter'
 
 const BannerHomePage = () => {
     const [dataCategory, setDataCategory] = useState<Array<any>>([]);
@@ -25,6 +27,8 @@ const BannerHomePage = () => {
     useEffect(() => {
         getCategoryAsync().then(() => { })
     }, [])
+
+
     return (
         <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={8} lg={8} xl={7}>
@@ -57,9 +61,14 @@ const BannerHomePage = () => {
                                         title={it.name}
                                         color='#1e293bb3'
                                     >
-                                        <div className='text-truncate font-semibold text-[14px] text-[#1e293bb3] hover:underline hover:text-[#007bff] transition duration-200'>
-                                            {it.name}
-                                        </div>
+                                        <Link to={{
+                                            pathname: ROUTE_PATH.LIST_COURSE,
+                                            search: it.name
+                                        }}>
+                                            <div className='text-truncate font-semibold text-[14px] text-[#1e293bb3] hover:underline hover:text-[#007bff] transition duration-200'>
+                                                {it.name}
+                                            </div>
+                                        </Link>
                                     </Tooltip>
                                 </div>
                             )

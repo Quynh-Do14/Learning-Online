@@ -4,7 +4,7 @@ import { Col, Row, Tooltip } from 'antd'
 import { ROUTE_PATH } from '../../../core/common/appRouter'
 import { ShowStarCommon } from '../../../infrastructure/common/components/controls/ShowStar'
 import { configImageURL, formatCurrencyVND } from '../../../infrastructure/helper/helper'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { InputSearchCommon } from '../../../infrastructure/common/components/input/input-search-common'
 import { ButtonCommon } from '../../../infrastructure/common/components/button/button-common'
 import courseService from '../../../infrastructure/repositories/course/service/course.service'
@@ -26,15 +26,23 @@ const ListCoursePage = () => {
     const [selectCategory, setSelectCategory] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
+    const { search } = useLocation()
+    const paramCategory = decodeURIComponent(search.replace("?", ""))
+
+    const [selectCategoryParam, setselectCategoryParam] = useState(paramCategory);
     const navigate = useNavigate();
 
-    const categoryState = useRecoilValue(CategoryState).data
-    const onGetListCourseAsync = async ({ name = "", selectCategory = "", size = pageSize, page = currentPage }) => {
+    const categoryState = useRecoilValue(CategoryState).data;
+
+    const onGetListCourseAsync = async ({ name = "", selectCategory = "" }) => {
         const param = {
-            page: page - 1,
-            size: size,
+            page: currentPage - 1,
+            size: pageSize,
             keyword: name,
-            category: selectCategory,
+            category: selectCategoryParam ? selectCategoryParam : selectCategory,
+        }
+        if (selectCategoryParam) {
+            setSelectCategory(selectCategoryParam)
         }
         try {
             await courseService.getCourse(
@@ -49,36 +57,32 @@ const ListCoursePage = () => {
             console.error(error)
         }
     }
-    const onSearch = async (name = "", selectCategory = "", size = pageSize, page = 1) => {
-        await onGetListCourseAsync({ name: name, selectCategory: selectCategory, size: size, page: page, });
+    const onSearch = async () => {
+        await onGetListCourseAsync({ name: searchText, selectCategory: selectCategory });
     };
 
     const onChangeSearchText = (e: any) => {
         setSearchText(e.target.value);
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            onSearch(e.target.value, selectCategory, pageSize, currentPage).then((_) => { });
-        }, Constants.DEBOUNCE_SEARCH);
     };
 
     const onChangeSelectCategory = (value: any) => {
+        const newURL = window.location.href;
+        const baseURL = newURL.split('?')[0];
+        window.history.replaceState({}, '', baseURL);
+        setselectCategoryParam("");
         setSelectCategory(value);
-        onSearch(searchText, value, pageSize, currentPage).then((_) => { });
-
     };
 
-
     useEffect(() => {
-        onSearch().then(_ => { });
-    }, [])
+        onGetListCourseAsync({ name: searchText, selectCategory: selectCategory }).then(_ => { });
+    }, [currentPage, pageSize]);
+
     const onChangePage = async (value: any) => {
         setCurrentPage(value)
-        await onSearch(searchText, selectCategory, pageSize, value).then(_ => { });
     }
     const onPageSizeChanged = async (value: any) => {
         setPageSize(value)
         setCurrentPage(1)
-        await onSearch(searchText, selectCategory, value, 1).then(_ => { });
     }
 
     const onNavigate = (id: any) => {
@@ -110,8 +114,8 @@ const ListCoursePage = () => {
                         <Col xs={24} sm={6} md={4} lg={4} className=''>
                             <ButtonCommon
                                 classColor={'orange'}
-                                onClick={() => { }
-                                } title={'Tìm kiếm'}
+                                onClick={onSearch}
+                                title={'Tìm kiếm'}
                             />
                         </Col>
                     </Row>

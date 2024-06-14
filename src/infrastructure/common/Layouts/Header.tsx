@@ -245,10 +245,14 @@ const HeaderClient = () => {
                         <ul className="gap-3 flex m-auto">
                             {Constants.MenuClient.List.map((item: any, index: number) => {
                                 return (
-                                    <li key={index} className={`cursor-pointer text-[15px] text-[#1e293bb3] font-semibold capitalize ${conditionActive(item.link)} `} onClick={() => navigate(item.link)} >
-                                        <div >
+                                    <li
+                                        key={index}
+                                        className={`cursor-pointer text-[15px] text-[#1e293bb3] font-semibold capitalize ${conditionActive(item.link)} `}
+                                    // onClick={() => navigate(item.link)}
+                                    >
+                                        <a href={item.link}>
                                             {item.label}
-                                        </div>
+                                        </a>
                                     </li>
                                 )
                             })}

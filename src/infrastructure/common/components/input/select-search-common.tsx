@@ -20,7 +20,7 @@ export const SelectSearchCommon = (props: Props) => {
         <div className='input-common'>
             <Select
                 showSearch
-                allowClear={false}
+                allowClear={true}
                 showArrow
                 disabled={disabled}
                 listHeight={120}
