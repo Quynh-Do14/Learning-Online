@@ -67,7 +67,7 @@ const DetailTeacherPage = () => {
                 </div>
                 <div className='bg-[#fff1da] padding-teacher flex flex-col gap-6'>
                     <p className='text-center font-semibold text-[20px]'>NHỮNG CÂU CHUYỆN THÚ VỊ</p>
-                    <Row align={"top"}>
+                    <Row align={"middle"}>
                         <Col xs={24} lg={12} xl={8} xxl={10}>
                             <div className='flex flex-col h-full'>
                                 <img src={configImageURL(detailTeacher.image?.fileCode) || noAvatar} alt="" className='' />
@@ -75,42 +75,39 @@ const DetailTeacherPage = () => {
                         </Col>
                         <Col xs={24} lg={12} xl={16} xxl={14}>
                             <div className='bg-[#fef7a4] py-4 px-8 shadow-lg margin-teacher flex flex-col h-full'>
-                                <div dangerouslySetInnerHTML={{ __html: detailTeacher.story }} />
-                                {/* {
+                                {
                                     activePageIndex == 1
                                         ?
-                                        <div dangerouslySetInnerHTML={{ __html: detailTeacher.story }}/>
+                                        <div dangerouslySetInnerHTML={{ __html: detailTeacher.story }} />
                                         :
                                         activePageIndex == 2
                                             ?
                                             <div dangerouslySetInnerHTML={{ __html: detailTeacher.achievements }} />
                                             :
                                             <div dangerouslySetInnerHTML={{ __html: detailTeacher.styleTeaching }} />
-                                } */}
+                                }
                             </div>
-                            {/* <Row
-                                className="mt-30"
-                                gutter={[10, 10]}
-                                justify={"center"}
-                                align={"middle"}
-                            >
-                                {Constants.TabInfoTeacher.List.map((_, index) => (
-                                    <Col key={index}>
-                                        <div
-                                            className="page-dot"
-                                            style={
-                                                index === activePageIndex
-                                                    ? { opacity: 1, background: "#FE7524" }
-                                                    : {}
-                                            }
-                                            onClick={() => setActivePageIndex(index)}
-                                        ></div>
-                                    </Col>
-                                ))}
-                            </Row> */}
                         </Col>
                     </Row>
-
+                    <Row
+                        gutter={[10, 10]}
+                        justify={"center"}
+                        align={"middle"}
+                    >
+                        {Constants.TabInfoTeacher.List.map((_, index) => (
+                            <Col key={index}>
+                                <div
+                                    className="page-dot"
+                                    style={
+                                        index === activePageIndex
+                                            ? { opacity: 1, background: "#FE7524" }
+                                            : {}
+                                    }
+                                    onClick={() => setActivePageIndex(index)}
+                                ></div>
+                            </Col>
+                        ))}
+                    </Row>
                 </div>
             </div>
 

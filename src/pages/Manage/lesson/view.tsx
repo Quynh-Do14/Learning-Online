@@ -14,6 +14,7 @@ import UploadVideo from '../../../infrastructure/common/components/input/upload-
 import TextEditorCommon from '../../../infrastructure/common/components/input/text-editor';
 import lessonService from '../../../infrastructure/repositories/lesson/service/lesson.service';
 import CheckBoxCommon from '../../../infrastructure/common/components/input/checkbox-common';
+import UploadFileCommon from '../../../infrastructure/common/components/input/upload-file';
 
 const ViewLessonManagement = () => {
     const [validate, setValidate] = useState<any>({});
@@ -138,7 +139,7 @@ const ViewLessonManagement = () => {
                                     />
                                 </Col>
                                 <Col span={24}>
-                                    <UploadVideo
+                                    <UploadFileCommon
                                         label={"Video"}
                                         attributeFile={dataLesson.lessionVideo}
                                         setVideo={setVideo}
@@ -151,7 +152,7 @@ const ViewLessonManagement = () => {
                                     />
                                 </Col>
                                 <Col span={24}>
-                                    <UploadVideo
+                                    <UploadFileCommon
                                         label={"Tài liệu"}
                                         attributeFile={dataLesson.lessionDocument}
                                         setVideo={setDocument}

@@ -221,6 +221,7 @@ const ListCourseManagement = () => {
                     pageSize={pageSize}
                     onChangeSize={onPageSizeChanged}
                     disabled={false}
+                    isClient={true}
                 />
             </div>
             <DialogConfirmCommon

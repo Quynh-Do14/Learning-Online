@@ -15,7 +15,7 @@ const ListTeacherPage = () => {
     const [listTeacher, setListTeacher] = useState<Array<any>>([])
     const [total, setTotal] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(10);
+    const [pageSize, setPageSize] = useState<number>(Constants.PaginationClientConfigs.Size);
     const [searchText, setSearchText] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -109,6 +109,7 @@ const ListTeacherPage = () => {
                     pageSize={pageSize}
                     onChangeSize={onPageSizeChanged}
                     disabled={false}
+                    isClient={true}
                 />
             </div>
             <FullPageLoading isLoading={loading} />

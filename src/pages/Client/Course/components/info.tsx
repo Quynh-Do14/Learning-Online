@@ -1,20 +1,25 @@
 import { Col, Row } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { configImageURL, formatCurrencyVND } from '../../../../infrastructure/helper/helper';
 import { ButtonCommon } from '../../../../infrastructure/common/components/button/button-common';
+import { MyCourseState } from '../../../../core/atoms/myCourse/myCourseState';
+import { useRecoilValue } from 'recoil';
 type Props = {
     videoURL: string,
     detailCourse: any,
     detailTeacher: any,
     openModalBuyCourse: Function,
+    checkMyCourse: boolean
 }
 const InfoCourse = (props: Props) => {
     const {
         videoURL,
         detailCourse,
         detailTeacher,
-        openModalBuyCourse
+        openModalBuyCourse,
+        checkMyCourse
     } = props;
+
     return (
         <Row gutter={[25, 20]}>
             <Col span={14}>
@@ -48,7 +53,9 @@ const InfoCourse = (props: Props) => {
                         <ButtonCommon
                             classColor={'orange'}
                             onClick={openModalBuyCourse}
-                            title={'Mua ngay'} />
+                            title={`${checkMyCourse ? 'Bạn đã mua khóa này' : 'Mua ngay'}`}
+                            disabled={checkMyCourse}
+                        />
                     </div>
                 </div>
             </Col>

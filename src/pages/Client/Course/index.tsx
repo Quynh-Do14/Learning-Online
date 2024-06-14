@@ -11,6 +11,10 @@ import courseService from '../../../infrastructure/repositories/course/service/c
 import Constants from '../../../core/common/constants'
 import { FullPageLoading } from '../../../infrastructure/common/components/controls/loading'
 import { PaginationCommon } from '../../../infrastructure/common/components/pagination/Pagination'
+import noAvatar from "../../../assets/images/no-avatar-product.jpg"
+import { SelectSearchCommon } from '../../../infrastructure/common/components/input/select-search-common'
+import { useRecoilValue } from 'recoil'
+import { CategoryState } from '../../../core/atoms/category/categoryState'
 
 let timeout: any
 const ListCoursePage = () => {
@@ -19,18 +23,18 @@ const ListCoursePage = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(Constants.PaginationClientConfigs.Size);
     const [searchText, setSearchText] = useState<string>("");
-    const [selectAddress, setSelectAddress] = useState<string>("");
-    const [startDate, setStartDate] = useState<string>("");
-    const [endDate, setEndDate] = useState<string>("");
+    const [selectCategory, setSelectCategory] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    const onGetListCourseAsync = async ({ name = "", address = "", size = pageSize, page = currentPage, startDate = "", endDate = "" }) => {
+
+    const categoryState = useRecoilValue(CategoryState).data
+    const onGetListCourseAsync = async ({ name = "", selectCategory = "", size = pageSize, page = currentPage }) => {
         const param = {
             page: page - 1,
             size: size,
             keyword: name,
-            address: address,
+            category: selectCategory,
         }
         try {
             await courseService.getCourse(
@@ -45,29 +49,38 @@ const ListCoursePage = () => {
             console.error(error)
         }
     }
-    const onSearch = async (name = "", address = "", size = pageSize, page = 1, startDate = "", endDate = "") => {
-        await onGetListCourseAsync({ name: name, address: address, size: size, page: page, startDate: startDate, endDate: endDate });
+    const onSearch = async (name = "", address = "", size = pageSize, page = 1, selectCategory = "") => {
+        await onGetListCourseAsync({ name: name, selectCategory: selectCategory, size: size, page: page, });
     };
 
     const onChangeSearchText = (e: any) => {
         setSearchText(e.target.value);
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            onSearch(e.target.value, selectAddress, pageSize, currentPage, startDate, endDate).then((_) => { });
+            onSearch(e.target.value, selectCategory, pageSize, currentPage).then((_) => { });
         }, Constants.DEBOUNCE_SEARCH);
     };
+
+    const onChangeSelectCategory = (value: any) => {
+        setSelectCategory(value);
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            onSearch(searchText, value, pageSize, currentPage).then((_) => { });
+        }, Constants.DEBOUNCE_SEARCH);
+    };
+
 
     useEffect(() => {
         onSearch().then(_ => { });
     }, [])
     const onChangePage = async (value: any) => {
         setCurrentPage(value)
-        await onSearch(searchText, selectAddress, pageSize, value, startDate, endDate).then(_ => { });
+        await onSearch(searchText, selectCategory, pageSize, value).then(_ => { });
     }
     const onPageSizeChanged = async (value: any) => {
         setPageSize(value)
         setCurrentPage(1)
-        await onSearch(searchText, selectAddress, value, 1, startDate, endDate).then(_ => { });
+        await onSearch(searchText, selectCategory, value, 1).then(_ => { });
     }
 
     const onNavigate = (id: any) => {
@@ -79,12 +92,21 @@ const ListCoursePage = () => {
                 <div className='bg-[#FFF] px-3 py-5 rounded-[4px] flex flex-col gap-2'>
                     <p className='font-bold text-[13px] text-[#1e293bb3]'>Tìm kiếm khóa học</p>
                     <Row gutter={[10, 10]} align={"middle"} justify={"space-between"}>
-                        <Col xs={24} sm={18} md={20} lg={20}>
+                        <Col xs={24} sm={9} md={10} lg={10}>
                             <InputSearchCommon
                                 placeholder={'Tìm kiếm theo tên khóa học'}
                                 value={searchText}
                                 onChange={onChangeSearchText}
                                 disabled={false}
+                            />
+                        </Col>
+                        <Col xs={24} sm={9} md={10} lg={10}>
+                            <SelectSearchCommon
+                                placeholder={'Tìm kiếm theo danh mục khóa học'}
+                                value={selectCategory}
+                                onChange={onChangeSelectCategory}
+                                disabled={false}
+                                listDataOfItem={categoryState}
                             />
                         </Col>
                         <Col xs={24} sm={6} md={4} lg={4} className=''>
@@ -99,8 +121,6 @@ const ListCoursePage = () => {
                 <Row gutter={[15, 15]}>
                     {
                         listCourse.map((it, index) => {
-                            console.log("it.courseImage?.fileCode", it.courseImage?.fileCode);
-
                             return (
                                 <Col
                                     xs={24} sm={12} md={8} lg={6}
@@ -109,8 +129,8 @@ const ListCoursePage = () => {
                                     <div className='bg-[#fff] shadow-sm p-4 rounded-[4px] flex flex-col gap-4 border-[1px] border-[#d7d7d7] cursor-pointer h-full'
                                         onClick={() => onNavigate(it.id)}
                                     >
-                                        <div className='w-full h-[50%]'>
-                                            <img src={configImageURL(it.courseImage?.fileCode)} alt="" className='w-full h-full' />
+                                        <div>
+                                            <img src={configImageURL(it.courseImage?.fileCode) || noAvatar} alt="" className='' />
                                         </div>
                                         <Tooltip
                                             title={it.name}

@@ -28,7 +28,7 @@ const CommentLesson = (props: Props) => {
         onOpenReply,
     } = props;
     const token = isTokenStoraged();
-
+    
     return (
         <div className='flex flex-col gap-4'>
             <div className='border-b-[1px] border-b-[#d4d4d4] pb-3'>
@@ -82,7 +82,7 @@ const CommentLesson = (props: Props) => {
                                             <div className='text-[12px] text-[#2a70b8] font-semibold'>
                                                 {convertDateShow(it.createdDate)}
                                             </div>
-                                            {
+                                            {/* {
                                                 token &&
                                                 <div className='flex items-center gap-1 cursor-pointer' onClick={() => onOpenReply(it.id)}>
                                                     <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -112,7 +112,7 @@ const CommentLesson = (props: Props) => {
                                                     </div>
 
                                                 }
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </Col>
                                 </Row>

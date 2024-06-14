@@ -34,6 +34,14 @@
   letter-spacing: 0.15px;
 }
 
+.button-common button.ant-btn.ant-btn-default.orange:disabled {
+  background: #a9a9a9;
+}
+
+.button-common button.ant-btn.ant-btn-default.orange:disabled:hover {
+  background: #a9a9a9;
+}
+
 .button-common button.ant-btn.ant-btn-default.gradient,
 .button-filter-common button.ant-btn.ant-btn-default.gradient {
   background: linear-gradient(30deg, #2782A9 28.37%, #82ACEA 67.26%, #288FBB 94.02%);

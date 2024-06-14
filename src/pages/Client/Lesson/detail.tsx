@@ -31,7 +31,7 @@ const DetailLessonPage = () => {
                 setLoading
             ).then((res) => {
                 setDetailLesson(res.lession);
-                setListComment(res?.comments?.content);
+                setListComment(res?.comments);
                 setVideoURL(res?.lession?.lessionVideo.fileCode
                 )
             })

@@ -1,5 +1,5 @@
 import { Col, Input, Row, Tooltip } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { convertDateShow } from '../../../../infrastructure/helper/helper';
 import { isTokenStoraged } from '../../../../infrastructure/utils/storage';
 import avatar from "../../../../assets/images/avatar.png"
@@ -28,7 +28,12 @@ const CommentCourse = (props: Props) => {
         onOpenReply,
     } = props;
     const token = isTokenStoraged();
+    const [parentComment, setParentComment] = useState<Array<any>>([]);
+    const [childComment, setChildComment] = useState<Array<any>>([]);
 
+    useEffect(() => {
+
+    }, [])
     return (
         <div className='flex flex-col gap-4'>
             <div className='border-b-[1px] border-b-[#d4d4d4] pb-3'>
@@ -66,25 +71,52 @@ const CommentCourse = (props: Props) => {
                                     <Col span={8}>
                                         <div className='flex items-start gap-3 '>
                                             <div>
-                                                <img src={it.user?.avatar || avatar} alt="" className='w-20 h-20 rounded-[50px]' />
+                                                <img src={it.parentComment?.user?.avatar || avatar} alt="" className='w-20 h-20 rounded-[50px]' />
                                             </div>
                                             <div>
-                                                <div className='text-[15px] text-[#1e293bb3] font-semibold'>{it.user?.name}</div>
-                                                <div className='text-[12px] text-[#2a70b8] font-semibold'>{it.user?.username}</div>
+                                                <div className='text-[15px] text-[#1e293bb3] font-semibold'>{it.parentComment?.user?.name}</div>
+                                                <div className='text-[12px] text-[#2a70b8] font-semibold'>{it.parentComment?.user?.username}</div>
                                             </div>
                                         </div>
                                     </Col>
                                     <Col span={16}>
                                         <div className='flex flex-col gap-2'>
                                             <div className='text-[15px] text-[#1e293bb3] font-semibold'>
-                                                {it.content}
+                                                {it.parentComment?.content}
                                             </div>
                                             <div className='text-[12px] text-[#2a70b8] font-semibold'>
-                                                {convertDateShow(it.createdDate)}
+                                                {convertDateShow(it.parentComment?.createdDate)}
+                                            </div>
+                                            <div className='flex flex-col gap-3'>
+                                                {
+                                                    it.childComments?.map((item: any, indexX: number) => (
+                                                        <Row key={indexX} className='border-b-[1px] border-b-[#d4d4d4] pb-2'>
+                                                            <Col span={8}>
+                                                                <div className='flex items-start gap-3'>
+                                                                    <div>
+                                                                        <img src={item?.user?.avatar || avatar} alt="" className='w-8 h-8 rounded-[50px]' />
+                                                                    </div>
+                                                                    <div>
+                                                                        <div className='text-[13px] text-[#1e293bb3] font-semibold'>{item?.user?.name}</div>
+                                                                        <div className='text-[10px] text-[#2a70b8] font-semibold'>{item?.user?.username}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </Col>
+                                                            <Col span={16}>
+                                                                <div className='text-[13px] text-[#1e293bb3] font-semibold'>
+                                                                    {item?.content}
+                                                                </div>
+                                                                <div className='text-[10px] text-[#2a70b8] font-semibold'>
+                                                                    {convertDateShow(item?.createdDate)}
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    ))
+                                                }
                                             </div>
                                             {
                                                 token &&
-                                                <div className='flex items-center gap-1 cursor-pointer' onClick={() => onOpenReply(it.id)}>
+                                                <div className='flex items-center gap-1 cursor-pointer' onClick={() => onOpenReply(it.parentComment?.id)}>
                                                     <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M20 17V15.8C20 14.1198 20 13.2798 19.673 12.638C19.3854 12.0735 18.9265 11.6146 18.362 11.327C17.7202 11 16.8802 11 15.2 11H4M4 11L8 7M4 11L8 15" stroke="#2a70b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                                     </svg>
@@ -96,7 +128,7 @@ const CommentCourse = (props: Props) => {
 
                                             <div>
                                                 {
-                                                    idReply == it.id &&
+                                                    idReply == it.parentComment?.id &&
                                                     <div className='flex items-center gap-4'>
                                                         <Input value={replyChange} onChange={(e) => setReplyChange(e.target.value)} placeholder='Trả lời bình luận' />
                                                         <Tooltip

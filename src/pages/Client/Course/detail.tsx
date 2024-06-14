@@ -17,6 +17,8 @@ import InfoCourse from './components/info'
 import DescriptionCourse from './components/description'
 import LessonCourse from './components/lesson'
 import CommentCourse from './components/comment'
+import { useRecoilValue } from 'recoil'
+import { MyCourseState } from '../../../core/atoms/myCourse/myCourseState'
 
 const DetailCourse = () => {
     const [tab, setTab] = useState(1);
@@ -38,7 +40,17 @@ const DetailCourse = () => {
 
     const param = useParams();
     const token = isTokenStoraged();
+    const myCourse = useRecoilValue(MyCourseState).data;
 
+    const [checkMyCourse, setCheckMyCourse] = useState<boolean>(false);
+
+    useEffect(() => {
+        myCourse.filter(it => {
+            if (it.course?.id == param.id) {
+                setCheckMyCourse(true)
+            }
+        })
+    }, [myCourse])
     const onGetCourseByIdAsync = async () => {
         try {
             await courseService.getCourseById(
@@ -49,7 +61,7 @@ const DetailCourse = () => {
                 setVideoURL(res.course?.courseVideo?.fileCode);
                 setDetailSuggestion(res?.suggestions);
                 setDetailTeacher(res.course?.teacher);
-                setListComment(res?.comments?.content);
+                setListComment(res?.commentPComments);
                 setTotal(res?.comments?.totalElements);
                 setListLesson(res?.lessions)
             })
@@ -152,6 +164,7 @@ const DetailCourse = () => {
                     detailCourse={detailCourse}
                     detailTeacher={detailTeacher}
                     openModalBuyCourse={openModalBuyCourse}
+                    checkMyCourse={checkMyCourse}
                 />
                 <Row gutter={[25, 10]} className='border-b-[1px] border-b-[#1e293b54]'>
                     {

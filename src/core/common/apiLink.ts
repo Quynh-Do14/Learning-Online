@@ -6,6 +6,7 @@ export class Endpoint {
         static ProfileUpdate = "/profile/update"
         static Customer = "/customers/update"
         static ChangePassword = "/auth/change-password"
+        static MyCourse = "/course_user/my-courses"
     }
     static Category = class {
         static Get = "/categories"

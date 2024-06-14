@@ -6,9 +6,15 @@ import HeaderClient from "./Header";
 import { useRecoilState } from "recoil";
 import { ProfileState } from "../../../core/atoms/profile/profileState";
 import { isTokenStoraged } from "../../utils/storage";
+import { MyCourseState } from "../../../core/atoms/myCourse/myCourseState";
+import categoryService from "../../repositories/category/service/category.service";
+import { CategoryState } from "../../../core/atoms/category/categoryState";
 const LayoutClient = ({ ...props }: any) => {
     const [dataProfile, setDataProfile] = useState<any>({});
     const [, setProfileState] = useRecoilState(ProfileState);
+    const [, setMyCourseState] = useRecoilState(MyCourseState);
+    const [, setCategoryState] = useRecoilState(CategoryState);
+
     const token = isTokenStoraged();
     const getProfileUser = async () => {
         if (token) {
@@ -35,6 +41,58 @@ const LayoutClient = ({ ...props }: any) => {
             getProfileUser().then(() => { })
         }
     }, [token])
+
+    const getMyCourse = async () => {
+        if (token) {
+            try {
+                await authService.myCourse(
+                    {
+                        size: 1000
+                    },
+                    () => { }
+                ).then((response) => {
+                    if (response) {
+                        setMyCourseState(
+                            {
+                                data: response.content,
+                            }
+                        )
+                    }
+                })
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+    useEffect(() => {
+        if (token) {
+            getMyCourse().then(() => { })
+        }
+    }, [token])
+
+    const getCatrgoryAsync = async () => {
+        try {
+            await categoryService.getCategory(
+                {
+                },
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setCategoryState(
+                        {
+                            data: response.content,
+                        }
+                    )
+                }
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        getCatrgoryAsync().then(() => { })
+    }, [token])
+
     return (
         <div className="main-layout-client">
             <HeaderClient />

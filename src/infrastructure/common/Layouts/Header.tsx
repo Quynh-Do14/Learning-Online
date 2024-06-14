@@ -13,6 +13,8 @@ import { useRecoilState } from 'recoil';
 import { ProfileState } from '../../../core/atoms/profile/profileState';
 import DialogConfirmCommon from '../components/modal/dialogConfirm';
 import RegisterModal from '../../../pages/Auth/Register';
+import ProfileModal from './Profile';
+import MyCourseModal from './MyCourse';
 const HeaderClient = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -21,6 +23,7 @@ const HeaderClient = () => {
     const [isOpenModalLogout, setIsOpenModalLogout] = useState<boolean>(false);
     const [isOpenModalProfile, setIsOpenModalProfile] = useState<boolean>(false);
     const [isOpenModalChangePassword, setIsOpenModalChangePassword] = useState<boolean>(false);
+    const [isOpenModalMyCourse, setIsOpenModalMyCourse] = useState<boolean>(false);
     const [isLoginClick, setIsLoginClick] = useState<boolean>(false);
     const [dataLogined, setDataLogined] = useState<boolean>(false)
     const [isRegister, setIsRegisterClick] = useState<boolean>(false)
@@ -93,6 +96,15 @@ const HeaderClient = () => {
         setIsOpenModalProfile(false);
     };
 
+
+    const openModalMyCourse = () => {
+        setIsOpenModalMyCourse(true);
+    };
+
+    const onCloseModalMyCourse = () => {
+        setIsOpenModalMyCourse(false);
+    };
+
     const openModalChangePassword = () => {
         setIsOpenModalChangePassword(true);
     };
@@ -128,6 +140,15 @@ const HeaderClient = () => {
                         Thông tin cá nhân
                     </div>
                 </Menu.Item>
+                <Menu.Item className='info-admin' onClick={openModalMyCourse}>
+                    <div className='info-admin-title px-1 py-2 flex items-center hover:text-[#5e5eff]'>
+                        <svg className='mr-1' width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 12V4C20 2.89543 19.1046 2 18 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M13 2V14L16.8182 11L20 14V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Khóa học đã mua
+                    </div>
+                </Menu.Item>
                 <Menu.Item className='info-admin' onClick={openModalChangePassword}>
                     <div className='info-admin-title px-1 py-2 flex items-center hover:text-[#5e5eff]'>
                         <svg className='mr-1' fill="#808080" height="20px" width="20px" version="1.1" id="Icon" xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +174,7 @@ const HeaderClient = () => {
                         Đăng xuất
                     </div>
                 </Menu.Item>
-            </Menu>
+            </Menu >
         )
     };
 
@@ -261,11 +282,19 @@ const HeaderClient = () => {
                 handleOk={onLogOut}
                 title={"Xác nhận"}
             />
-            {/*   <ProfileModal
+            <ProfileModal
                 handleCancel={onCloseModalProfile}
                 visible={isOpenModalProfile}
+                loading={loading}
+                setLoading={setLoading}
+            />
+            <MyCourseModal
+                handleCancel={onCloseModalMyCourse}
+                visible={isOpenModalMyCourse}
                 isLoading={loading}
             />
+            {/*  
+
             <ChangePasswordModal
                 handleCancel={onCloseModalChangePassword}
                 visible={isOpenModalChangePassword}

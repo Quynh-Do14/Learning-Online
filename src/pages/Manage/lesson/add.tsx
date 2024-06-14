@@ -16,6 +16,8 @@ import InputSelectAPICommon from '../../../infrastructure/common/components/inpu
 import { useRecoilValue } from 'recoil';
 import { CourseState } from '../../../core/atoms/course/courseState';
 import UploadVideo from '../../../infrastructure/common/components/input/upload-video';
+import UploadFileCommon from '../../../infrastructure/common/components/input/upload-file';
+import CheckBoxCommon from '../../../infrastructure/common/components/input/checkbox-common';
 
 const AddLessonManagement = () => {
     const [validate, setValidate] = useState<any>({});
@@ -53,7 +55,7 @@ const AddLessonManagement = () => {
         return allRequestOK;
     };
 
-    const onAddCategoryAsync = async () => {
+    const onAddLessonAsync = async () => {
         await setSubmittedTime(Date.now());
         if (isValidData()) {
             await lessonService.AddLesson({
@@ -62,7 +64,7 @@ const AddLessonManagement = () => {
                 description: dataLesson.description,
                 lessionDocument: document,
                 lessionVideo: video,
-                publicDocument: dataLesson.publicDocument
+                publicDocument: dataLesson.publicDocument || false
             },
                 onBack,
                 setLoading
@@ -109,7 +111,7 @@ const AddLessonManagement = () => {
                                     />
                                 </Col>
                                 <Col span={24}>
-                                    <UploadVideo
+                                    <UploadFileCommon
                                         label={"Video"}
                                         attributeFile={dataLesson.lessionVideo}
                                         setVideo={setVideo}
@@ -122,7 +124,7 @@ const AddLessonManagement = () => {
                                     />
                                 </Col>
                                 <Col span={24}>
-                                    <UploadVideo
+                                    <UploadFileCommon
                                         label={"Tài liệu"}
                                         attributeFile={dataLesson.lessionDocument}
                                         setVideo={setDocument}
@@ -132,6 +134,19 @@ const AddLessonManagement = () => {
                                         submittedTime={submittedTime}
                                         isRequired={true}
                                         attribute={'lessionDocument'}
+                                    />
+                                </Col>
+                                <Col span={24}>
+                                    <CheckBoxCommon
+                                        label={'Tài liệu công khai'}
+                                        attribute={'publicDocument'}
+                                        setData={setDataLesson}
+                                        dataAttribute={dataLesson.publicDocument}
+                                        validate={validate}
+                                        setValidate={setValidate}
+                                        submittedTime={submittedTime}
+                                        isRequired={true}
+                                        disabled={false}
                                     />
                                 </Col>
                                 <Col span={24}>
@@ -163,7 +178,7 @@ const AddLessonManagement = () => {
                     </Col>
                     <Col className='mx-1'>
                         <ButtonCommon
-                            onClick={onAddCategoryAsync}
+                            onClick={onAddLessonAsync}
                             classColor="green"
                             icon={null}
                             title={'Thêm mới'}

@@ -1,6 +1,8 @@
 import { Col, Row, Tooltip } from 'antd'
 import noAvatar from "../../../../assets/images/no-avatar.png"
 import { configGender, configImageURL, formatCurrencyVND } from '../../../../infrastructure/helper/helper'
+import { ROUTE_PATH } from '../../../../core/common/appRouter'
+import Constants from '../../../../core/common/constants'
 type Props = {
     tab: number,
     detailCourse: any,
@@ -78,7 +80,12 @@ const DescriptionCourse = (props: Props) => {
                                                         title={it.name}
                                                         color='#1e293bb3'
                                                     >
-                                                        <div className='text-[13px] text-[#2a70b8] font-semibold hover:text-[#c46f20] hover:underline transition duration-200'>{it.name}</div>
+                                                        <a
+                                                            href={`${(ROUTE_PATH.DETAIL_COURSE).replace(`${Constants.UseParams.Id}`, "")}${it.id}`}
+                                                            className='text-[13px] text-[#2a70b8] font-semibold hover:text-[#c46f20] hover:underline transition duration-200'
+                                                        >
+                                                            {it.name}
+                                                        </a>
                                                     </Tooltip>
                                                     <div className='flex gap-1 items-center text-[14px] font-semibold text-[#d63939] '>
                                                         <p>Giá:</p>

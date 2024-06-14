@@ -108,6 +108,7 @@ const DocumentPage = () => {
                     pageSize={pageSize}
                     onChangeSize={onPageSizeChanged}
                     disabled={false}
+                    isClient={true}
                 />
             </div>
             <FullPageLoading isLoading={loading} />

@@ -131,9 +131,9 @@
 }
 
 @media only screen and (min-width: 1600px) {
-    /* .margin-teacher {
+    .margin-teacher {
         margin-left: -30px;
-    } */
+    }
 
     .padding-teacher {
         padding: 24px 112px;
@@ -141,9 +141,9 @@
 }
 
 @media only screen and (min-width: 1400px) {
-    /* .margin-teacher {
+    .margin-teacher {
         margin-left: -30px;
-    } */
+    }
 
     .padding-teacher {
         padding: 24px 80px;
@@ -151,9 +151,9 @@
 }
 
 @media only screen and (min-width: 993px) and (max-width: 1400px) {
-    /* .margin-teacher {
+    .margin-teacher {
         margin-left: -30px;
-    } */
+    }
 
     .padding-teacher {
         padding: 24px 40px;
@@ -161,8 +161,7 @@
 }
 
 @media only screen and (max-width: 992px) {
-    /* .margin-teacher {
+    .margin-teacher {
         margin-left: 0px;
-    } */
-
+    }
 }

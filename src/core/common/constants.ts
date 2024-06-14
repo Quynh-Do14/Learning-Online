@@ -59,12 +59,12 @@ export default class Constants {
     }
 
     static PaginationClientConfigs = class {
-        static Size = 6;
+        static Size = 8;
         static LimitSize = 60;
         static AllSize = 9000;
         static PageSizeList = [
-            { label: "6", value: 6 },
-            { label: "12", value: 12 },
+            { label: "8", value: 8 },
+            { label: "16", value: 16 },
             { label: "48", value: 48 },
         ]
     };

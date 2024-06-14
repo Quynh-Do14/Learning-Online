@@ -17,6 +17,7 @@ import InputSelectTeacherCommon from '../../../infrastructure/common/components/
 import InputSelectAPICommon from '../../../infrastructure/common/components/input/select-api-common';
 import { useRecoilValue } from 'recoil';
 import { CategoryState } from '../../../core/atoms/category/categoryState';
+import UploadFileCommon from '../../../infrastructure/common/components/input/upload-file';
 
 const ViewCourseManagement = () => {
     const [validate, setValidate] = useState<any>({});
@@ -88,8 +89,8 @@ const ViewCourseManagement = () => {
             });
         };
     }, [detailCourse]);
-    console.log("detailCourse",detailCourse);
-    
+    console.log("detailCourse", detailCourse);
+
     const onUpdateCourseAsync = async () => {
         await setSubmittedTime(Date.now());
         if (isValidData()) {
@@ -193,7 +194,7 @@ const ViewCourseManagement = () => {
                                     />
                                 </Col>
                                 <Col span={24}>
-                                    <UploadVideo
+                                    <UploadFileCommon
                                         label={"Tải video"}
                                         attributeFile={dataCourse.courseVideo}
                                         setVideo={setVideo}

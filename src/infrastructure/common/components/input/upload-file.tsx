@@ -32,7 +32,7 @@ function UploadFileCommon(props: Props) {
     const [value, setValue] = useState<any>();
 
     const handleFileChange = (event: any) => {
-        setValue(event.target.files[0]);
+        setValue("");
         setVideo(event.target.files[0]);
     };
 
@@ -69,7 +69,14 @@ function UploadFileCommon(props: Props) {
                     </span>
                 </div>
                 <div className="">
-                    <input type="file" id="file" onChange={handleFileChange} />
+                    <input type="file" id="file" onChange={handleFileChange} placeholder='Tải file'/>
+                    {
+                        value
+                        &&
+                        <div className='text-[15px] text-[#1e293be2] mt-2'>
+                            {value}
+                        </div>
+                    }
                 </div>
             </div>
         </div>
