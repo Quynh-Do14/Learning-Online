@@ -10,7 +10,7 @@ export const ROUTE_PATH = {
     DETAIL_COURSE: `${PREFIX}/course-public/view/:id`,
     LIST_TEACHER: `${PREFIX}/teacher-public`,
     DETAIL_TEACHER: `${PREFIX}/teacher-public/view/:id`,
-    
+
     LIST_LESSON: `${PREFIX}/lesson-public`,
     DETAIL_LESSON: `${PREFIX}/lesson-public/view/:id`,
 
@@ -35,4 +35,8 @@ export const ROUTE_PATH = {
     LESSON_MANAGEMENT: `${PREFIX}/lesson`,
     ADD_LESSON_MANAGEMENT: `${PREFIX}/lesson/add`,
     VIEW_LESSON_MANAGEMENT: `${PREFIX}/lesson/view/:id`,
+
+    BANNER_MANAGEMENT: `${PREFIX}/banner`,
+    ADD_BANNER_MANAGEMENT: `${PREFIX}/banner/add`,
+    VIEW_BANNER_MANAGEMENT: `${PREFIX}/banner/view/:id`,
 }

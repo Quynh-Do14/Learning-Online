@@ -3,12 +3,12 @@ import { FailMessage, SuccessMessage } from "../../../common/components/toast/no
 import { RequestService } from "../../../utils/response";
 import { saveToken } from "../../../utils/storage";
 
-class TeacherService {
-    async getTeacher(params: object, setLoading: Function) {
+class BannerService {
+    async getBanner(params: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(Endpoint.Teacher.Get, {
+                .get(Endpoint.Banner.Get, {
                     ...params
                 })
                 .then(response => {
@@ -24,11 +24,11 @@ class TeacherService {
             setLoading(false);
         }
     };
-    async getTeacherById(id: number, setLoading: Function) {
+    async getBannerById(id: number, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .get(`${Endpoint.Teacher.Get}/${id}`)
+                .get(`${Endpoint.Banner.Get}/${id}`)
                 .then(response => {
                     if (response) {
                         return response
@@ -42,11 +42,11 @@ class TeacherService {
             setLoading(false);
         }
     };
-    async addTeacher(data: object, onBack: Function, setLoading: Function) {
+    async addBanner(data: object, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .postForm(Endpoint.Teacher.Add,
+                .postForm(Endpoint.Banner.Add,
                     data
                 )
                 .then(response => {
@@ -65,11 +65,11 @@ class TeacherService {
             setLoading(false);
         }
     }
-    async updateTeacher(id: number, data: object, onBack: Function, setLoading: Function) {
+    async updateBanner(id: number, data: object, onBack: Function, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .putForm(`${Endpoint.Teacher.Update}/${id}`,
+                .putForm(`${Endpoint.Banner.Update}/${id}`,
                     data
                 )
                 .then(response => {
@@ -88,11 +88,11 @@ class TeacherService {
             setLoading(false);
         }
     }
-    async deleteTeacher(id: number, setLoading: Function) {
+    async deleteBanner(id: number, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
-                .delete(`${Endpoint.Teacher.Delete}/${id}`)
+                .delete(`${Endpoint.Banner.Delete}/${id}`)
                 .then(response => {
                     if (response) {
                         SuccessMessage("Xóa thành công", "")
@@ -108,24 +108,6 @@ class TeacherService {
             setLoading(false);
         }
     }
-    async reportTeacher(setLoading: Function) {
-        setLoading(true)
-        try {
-            return await RequestService
-                .get(Endpoint.Teacher.Report)
-                .then(response => {
-                    if (response) {
-                        return response
-                    }
-                    setLoading(false)
-                    return response;
-                });
-        } catch (error) {
-            console.error(error)
-        } finally {
-            setLoading(false);
-        }
-    };
 }
 
-export default new TeacherService();
+export default new BannerService();

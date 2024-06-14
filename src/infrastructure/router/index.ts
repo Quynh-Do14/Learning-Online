@@ -22,6 +22,9 @@ import DetailTeacherPage from "../../pages/Client/Teacher/detail";
 import DetailDocumentPage from "../../pages/Client/Lesson/detail";
 import LessonPage from "../../pages/Client/Lesson";
 import DetailLessonPage from "../../pages/Client/Lesson/detail";
+import ListBannerManagement from "../../pages/Manage/banner-management/list";
+import AddBannerManagement from "../../pages/Manage/banner-management/add";
+import ViewBannerManagement from "../../pages/Manage/banner-management/view";
 
 export const privateRoutes = [
 
@@ -141,6 +144,22 @@ export const privateRoutes = [
     {
         path: ROUTE_PATH.VIEW_LESSON_MANAGEMENT,
         component: ViewLessonManagement,
+        private: true,
+    },
+
+    {
+        path: ROUTE_PATH.BANNER_MANAGEMENT,
+        component: ListBannerManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.ADD_BANNER_MANAGEMENT,
+        component: AddBannerManagement,
+        private: true,
+    },
+    {
+        path: ROUTE_PATH.VIEW_BANNER_MANAGEMENT,
+        component: ViewBannerManagement,
         private: true,
     },
 ]

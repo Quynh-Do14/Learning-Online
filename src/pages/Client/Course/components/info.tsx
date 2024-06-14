@@ -4,6 +4,7 @@ import { configImageURL, formatCurrencyVND } from '../../../../infrastructure/he
 import { ButtonCommon } from '../../../../infrastructure/common/components/button/button-common';
 import { MyCourseState } from '../../../../core/atoms/myCourse/myCourseState';
 import { useRecoilValue } from 'recoil';
+import { ProfileState } from '../../../../core/atoms/profile/profileState';
 type Props = {
     videoURL: string,
     detailCourse: any,
@@ -19,6 +20,20 @@ const InfoCourse = (props: Props) => {
         openModalBuyCourse,
         checkMyCourse
     } = props;
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [isTeacher, setIsTeacher] = useState<boolean>(false);
+    const dataProfile = useRecoilValue(ProfileState).user;
+
+    useEffect(() => {
+        dataProfile?.roles?.map((it: any) => {
+            if (it.name == "ADMIN") {
+                setIsAdmin(true)
+            }
+            else if (it.name == "TEACHER") {
+                setIsTeacher(true)
+            }
+        })
+    }, [dataProfile]);
 
     return (
         <Row gutter={[25, 20]}>
@@ -38,7 +53,7 @@ const InfoCourse = (props: Props) => {
             <Col span={10}>
                 <div className='flex flex-col gap-2'>
                     <p className='text-[24px] font-semibold text-[#2a70b8]'>{detailCourse.name} </p>
-                    <p className='text-[14px] font-semibold text-[#1e293bb3]'>(Còn lại {detailCourse.remain} khóa) </p>
+                    {/* <p className='text-[14px] font-semibold text-[#1e293bb3]'>(Còn lại {detailCourse.remain} khóa) </p> */}
                     <div className='flex gap-1 items-center text-[16px] font-semibold'>
                         <p className='text-[#1e293bb3]'>Giáo viên:</p>
                         <p className='text-[#2a70b8]'>{detailTeacher?.user?.name} </p>
@@ -54,7 +69,7 @@ const InfoCourse = (props: Props) => {
                             classColor={'orange'}
                             onClick={openModalBuyCourse}
                             title={`${checkMyCourse ? 'Bạn đã mua khóa này' : 'Mua ngay'}`}
-                            disabled={checkMyCourse}
+                            disabled={isAdmin || isTeacher || checkMyCourse}
                         />
                     </div>
                 </div>

@@ -30,10 +30,12 @@ function UploadFileCommon(props: Props) {
     } = props;
 
     const [value, setValue] = useState<any>();
+    const [valueCheckValidate, setValueCheckValidate] = useState<any>();
 
     const handleFileChange = (event: any) => {
-        setValue("");
+        setValueCheckValidate(event.target.files[0]);
         setVideo(event.target.files[0]);
+        setValue("")
     };
 
     useEffect(() => {
@@ -49,7 +51,7 @@ function UploadFileCommon(props: Props) {
 
     const onBlur = (isImplicitChange = false) => {
         if (isRequired) {
-            validateFields(isImplicitChange, attribute, !value, setValidate, validate, !value ? `Vui lòng tải ${labelLower}` : "");
+            validateFields(isImplicitChange, attribute, !valueCheckValidate, setValidate, validate, !valueCheckValidate ? `Vui lòng tải ${labelLower}` : "");
         }
     };
 
@@ -69,7 +71,7 @@ function UploadFileCommon(props: Props) {
                     </span>
                 </div>
                 <div className="">
-                    <input type="file" id="file" onChange={handleFileChange} placeholder='Tải file'/>
+                    <input type="file" id="file" onChange={handleFileChange} placeholder='Tải file' />
                     {
                         value
                         &&

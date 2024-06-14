@@ -10,6 +10,7 @@ import { ProfileState } from '../../../core/atoms/profile/profileState';
 import UploadImage from '../components/input/upload-image';
 import InputDateCommon from '../components/input/input-date';
 import { convertDateOnly } from '../../helper/helper';
+import { isTokenStoraged } from '../../utils/storage';
 
 type Props = {
   // handleOk: Function,
@@ -27,6 +28,7 @@ const ProfileModal = (props: Props) => {
   const [imageUrl, setImageUrl] = useState<any>(null);
   const [avatar, setAvatar] = useState(null);
   const navigate = useNavigate();
+  const token = isTokenStoraged();
 
   const [, setDetailState] = useRecoilState(ProfileState);
 
@@ -51,24 +53,28 @@ const ProfileModal = (props: Props) => {
     return allRequestOK;
   };
 
-  const onGetUserByIdAsync = async () => {
-    try {
-      await authService.profile(
-        setLoading
-      ).then((response) => {
-        setDetailProfile(response)
-        setDetailState({
-          user: response
+  const onGetProfileAsync = async () => {
+    if (token) {
+      try {
+        await authService.profile(
+          setLoading
+        ).then((response) => {
+          setDetailProfile(response)
+          setDetailState({
+            user: response
+          })
         })
-      })
-    }
-    catch (error) {
-      console.error(error)
+      }
+      catch (error) {
+        console.error(error)
+      }
     }
   }
   useEffect(() => {
-    onGetUserByIdAsync().then(() => { })
-  }, [])
+    if (token) {
+      onGetProfileAsync().then(() => { })
+    }
+  }, [token])
 
   useEffect(() => {
     if (detailProfile) {
@@ -98,7 +104,7 @@ const ProfileModal = (props: Props) => {
           dob: convertDateOnly(dataProfile.dob),
         },
         () => {
-          onGetUserByIdAsync();
+          onGetProfileAsync();
           handleCancel();
         },
         setLoading
@@ -117,7 +123,7 @@ const ProfileModal = (props: Props) => {
       closable={false}
       footer={false}
       onCancel={() => handleCancel()}
-      width={"90%"}
+      width={"70%"}
     >
       <div className='main-page h-full flex-1 overflow-auto bg-white px-4 py-8'>
         <div className='bg-white scroll-auto'></div>
@@ -197,7 +203,7 @@ const ProfileModal = (props: Props) => {
                 <InputTextCommon
                   label={"CCCD"}
                   attribute={"cccd"}
-                  isRequired={true}
+                  isRequired={false}
                   dataAttribute={dataProfile.cccd}
                   setData={setDataProfile}
                   disabled={false}

@@ -5,7 +5,7 @@ export class Endpoint {
         static Profile = "/profile"
         static ProfileUpdate = "/profile/update"
         static Customer = "/customers/update"
-        static ChangePassword = "/auth/change-password"
+        static ChangePassword = "/profile/change-password"
         static MyCourse = "/course_user/my-courses"
     }
     static Category = class {
@@ -13,6 +13,12 @@ export class Endpoint {
         static Add = "/categories/admin/add"
         static Update = "/categories/admin/update"
         static Delete = "/categories/admin/delete"
+    }
+    static Banner = class {
+        static Get = "/banner"
+        static Add = "/banner/admin/add"
+        static Update = "/banner/admin/update"
+        static Delete = "/banner/admin/delete"
     }
 
     static Course = class {
@@ -28,6 +34,7 @@ export class Endpoint {
         static Add = "/teachers/admin/add"
         static Update = "/teachers/admin/update"
         static Delete = "/teachers/admin/delete"
+        static Report = "/teachers/report"
     }
 
     static Lesson = class {

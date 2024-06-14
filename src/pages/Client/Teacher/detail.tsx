@@ -97,7 +97,7 @@ const DetailTeacherPage = () => {
                         {Constants.TabInfoTeacher.List.map((_, index) => (
                             <Col key={index}>
                                 <div
-                                    className="page-dot"
+                                    className="page-dot cursor-pointer"
                                     style={
                                         index === activePageIndex
                                             ? { opacity: 1, background: "#FE7524" }

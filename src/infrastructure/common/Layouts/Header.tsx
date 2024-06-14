@@ -15,6 +15,8 @@ import DialogConfirmCommon from '../components/modal/dialogConfirm';
 import RegisterModal from '../../../pages/Auth/Register';
 import ProfileModal from './Profile';
 import MyCourseModal from './MyCourse';
+import ChangePasswordModal from '../components/toast/changePassword';
+import ReportCourseModal from './ReportCourse';
 const HeaderClient = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,11 +26,14 @@ const HeaderClient = () => {
     const [isOpenModalProfile, setIsOpenModalProfile] = useState<boolean>(false);
     const [isOpenModalChangePassword, setIsOpenModalChangePassword] = useState<boolean>(false);
     const [isOpenModalMyCourse, setIsOpenModalMyCourse] = useState<boolean>(false);
+    const [isOpenModalReport, setIsOpenModalReport] = useState<boolean>(false);
+
     const [isLoginClick, setIsLoginClick] = useState<boolean>(false);
     const [dataLogined, setDataLogined] = useState<boolean>(false)
     const [isRegister, setIsRegisterClick] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false);
-    const [isAdmin, setIsAdmin] = useState<boolean>(false)
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [isTeacher, setIsTeacher] = useState<boolean>(false);
 
     const [, setProfileState] = useRecoilState(ProfileState);
     const token = isTokenStoraged();
@@ -85,6 +90,9 @@ const HeaderClient = () => {
             if (it.name == "ADMIN") {
                 setIsAdmin(true)
             }
+            else if (it.name == "TEACHER") {
+                setIsTeacher(true)
+            }
         })
     }, [dataProfile])
 
@@ -105,6 +113,14 @@ const HeaderClient = () => {
         setIsOpenModalMyCourse(false);
     };
 
+    const openModalReport = () => {
+        setIsOpenModalReport(true);
+    };
+
+    const onCloseModalReport = () => {
+        setIsOpenModalReport(false);
+    };
+
     const openModalChangePassword = () => {
         setIsOpenModalChangePassword(true);
     };
@@ -112,7 +128,6 @@ const HeaderClient = () => {
     const onCloseModalChangePassword = () => {
         setIsOpenModalChangePassword(false);
     };
-
 
     const listAction = () => {
         return (
@@ -140,15 +155,34 @@ const HeaderClient = () => {
                         Thông tin cá nhân
                     </div>
                 </Menu.Item>
-                <Menu.Item className='info-admin' onClick={openModalMyCourse}>
-                    <div className='info-admin-title px-1 py-2 flex items-center hover:text-[#5e5eff]'>
-                        <svg className='mr-1' width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 12V4C20 2.89543 19.1046 2 18 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M13 2V14L16.8182 11L20 14V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Khóa học đã mua
-                    </div>
-                </Menu.Item>
+                {
+                    isTeacher || isAdmin
+                        ?
+                        null
+                        :
+                        <Menu.Item className='info-admin' onClick={openModalMyCourse}>
+                            <div className='info-admin-title px-1 py-2 flex items-center hover:text-[#5e5eff]'>
+                                <svg className='mr-1' width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 12V4C20 2.89543 19.1046 2 18 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M13 2V14L16.8182 11L20 14V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                Khóa học đã mua
+                            </div>
+                        </Menu.Item>
+                }
+                {
+                    isTeacher
+                    &&
+                    <Menu.Item className='info-admin' onClick={openModalReport}>
+                        <div className='info-admin-title px-1 py-2 flex items-center hover:text-[#5e5eff]'>
+                            <svg className='mr-1' width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 12V4C20 2.89543 19.1046 2 18 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M13 2V14L16.8182 11L20 14V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Báo cáo doanh thu khóa học
+                        </div>
+                    </Menu.Item>
+                }
                 <Menu.Item className='info-admin' onClick={openModalChangePassword}>
                     <div className='info-admin-title px-1 py-2 flex items-center hover:text-[#5e5eff]'>
                         <svg className='mr-1' fill="#808080" height="20px" width="20px" version="1.1" id="Icon" xmlns="http://www.w3.org/2000/svg"
@@ -230,13 +264,13 @@ const HeaderClient = () => {
                             isTokenStoraged()
                                 ?
                                 <Row align={"middle"} >
-                                    <Col className='mr-2 flex flex-col align-bottom'>
+                                    <Col className='mr-2 flex flex-col items-end align-bottom'>
                                         <div className='text-[15px] text-[#2a70b8] font-semibold'>
                                             {dataProfile?.name}
                                         </div>
-                                        {/* <div className='role'>
-                                            {dataProfile.roles[0]?.name}
-                                        </div> */}
+                                        <div className='text-[12px] text-[#1e293bb3] font-semibold'>
+                                            {dataProfile.roles?.[0]?.name}
+                                        </div>
                                     </Col>
                                     <Col>
                                         <Dropdown overlay={listAction} trigger={['click']}>
@@ -291,15 +325,23 @@ const HeaderClient = () => {
             <MyCourseModal
                 handleCancel={onCloseModalMyCourse}
                 visible={isOpenModalMyCourse}
-                isLoading={loading}
+                loading={loading}
+                setLoading={setLoading}
             />
-            {/*  
-
+            <ReportCourseModal
+                handleCancel={onCloseModalReport}
+                visible={isOpenModalReport}
+                loading={loading}
+                setLoading={setLoading}
+            />
             <ChangePasswordModal
                 handleCancel={onCloseModalChangePassword}
                 visible={isOpenModalChangePassword}
                 isLoading={loading}
             />
+            {/*  
+
+
             <ModalReservationShow
                 handleCancel={onCloseModalReservationShow}
                 visible={isOpenModalReservationShow}

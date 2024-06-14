@@ -54,8 +54,11 @@ const ChangePasswordModal = (props: Props) => {
                     handleCancel();
                     await authService.logout(
                         setLoading
-                    )
-                    navigate(ROUTE_PATH.LOGIN)
+
+                    ).then(() => {
+                        navigate(ROUTE_PATH.HOME_PAGE);
+                        window.location.reload();
+                    });
                 },
                 setLoading,
             )

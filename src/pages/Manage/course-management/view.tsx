@@ -89,7 +89,6 @@ const ViewCourseManagement = () => {
             });
         };
     }, [detailCourse]);
-    console.log("detailCourse", detailCourse);
 
     const onUpdateCourseAsync = async () => {
         await setSubmittedTime(Date.now());

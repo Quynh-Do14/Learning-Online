@@ -36,7 +36,7 @@ export const SelectSearchCommon = (props: Props) => {
                         return (
                             <Select.Option
                                 key={index}
-                                value={item.id}
+                                value={item.name}
                                 title={item.name}
                             >
                                 {item.name}

@@ -24,6 +24,11 @@ export default class Constants {
                 link: ROUTE_PATH.TEACHER_MANAGEMENT,
                 icon: UserOutlined
             },
+            {
+                label: "Quản lý ảnh quảng cáo",
+                link: ROUTE_PATH.BANNER_MANAGEMENT,
+                icon: UserOutlined
+            },
         ]
     };
     static MenuClient = class {
@@ -89,8 +94,8 @@ export default class Constants {
         static List = [
             { label: "Mô tả khóa học", value: 1 },
             { label: "Giáo viên giảng dạy", value: 2 },
-            { label: "Đối tượng học sinh", value: 3 },
-            { label: "Kết quả", value: 4 },
+            { label: "Kết quả đạt được", value: 3 },
+            { label: "Đối tượng học sinh", value: 4 },
         ]
     }
     static TabLesson = class {

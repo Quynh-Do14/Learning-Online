@@ -49,7 +49,7 @@ const ListCoursePage = () => {
             console.error(error)
         }
     }
-    const onSearch = async (name = "", address = "", size = pageSize, page = 1, selectCategory = "") => {
+    const onSearch = async (name = "", selectCategory = "", size = pageSize, page = 1) => {
         await onGetListCourseAsync({ name: name, selectCategory: selectCategory, size: size, page: page, });
     };
 
@@ -63,10 +63,8 @@ const ListCoursePage = () => {
 
     const onChangeSelectCategory = (value: any) => {
         setSelectCategory(value);
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            onSearch(searchText, value, pageSize, currentPage).then((_) => { });
-        }, Constants.DEBOUNCE_SEARCH);
+        onSearch(searchText, value, pageSize, currentPage).then((_) => { });
+
     };
 
 

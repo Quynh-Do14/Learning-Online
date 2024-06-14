@@ -3,6 +3,7 @@ import noAvatar from "../../../../assets/images/no-avatar.png"
 import { configGender, configImageURL, formatCurrencyVND } from '../../../../infrastructure/helper/helper'
 import { ROUTE_PATH } from '../../../../core/common/appRouter'
 import Constants from '../../../../core/common/constants'
+import { useNavigate } from 'react-router-dom'
 type Props = {
     tab: number,
     detailCourse: any,
@@ -16,6 +17,12 @@ const DescriptionCourse = (props: Props) => {
         tab,
         detailSuggestion,
     } = props;
+
+    const navigate = useNavigate();
+
+    const onNavigate = (id: any) => {
+        navigate(`${(ROUTE_PATH.DETAIL_TEACHER).replace(`${Constants.UseParams.Id}`, "")}${id}`);
+    }
     return (
         <div className='border-b-[1px] border-b-[#d4d4d4] pb-3'>
             <Row gutter={[25, 20]}>
@@ -34,14 +41,16 @@ const DescriptionCourse = (props: Props) => {
                                     <p className='text-[16px] font-semibold text-[#1e293be3]'>Thông tin giáo viên</p>
                                     <Row align={"top"} gutter={[20, 20]}>
                                         <Col span={12}>
-                                            <img src={detailTeacher?.user?.avatar || noAvatar} alt="" className='w-full' />
+                                            <img src={configImageURL(detailTeacher?.image?.fileCode) || noAvatar} alt="" className='w-full' />
                                         </Col>
-                                        <Col span={12} className='flex flex-col gap-4'>
-                                            <div className='text-truncate text-[14px] text-[#2a70b8] font-semibold hover:text-[#c46f20] hover:underline transition duration-200'>
+                                        <Col span={12} className='flex flex-col gap-2'>
+                                            <div
+                                                onClick={() => onNavigate(detailTeacher.id)}
+                                                className='text-[14px] text-[#2a70b8] font-semibold hover:text-[#c46f20] hover:underline transition duration-200 cursor-pointer'>
                                                 {configGender(detailTeacher?.sex)}: {detailTeacher?.user?.name}
                                             </div>
-                                            <div className='text-[14px] font-semibold'>{detailTeacher?.discipline?.name}</div>
-                                            <div className='text-truncate-3 text-[14px]'>{detailTeacher?.level}</div>
+                                            <div className='text-[14px] font-semibold'>Chuyên ngành: {detailTeacher?.discipline}</div>
+                                            <div className='text-[14px] font-semibold'>{detailTeacher?.level}</div>
                                         </Col>
                                     </Row>
                                 </div>
@@ -49,15 +58,16 @@ const DescriptionCourse = (props: Props) => {
                                 tab == 3
                                     ?
                                     <div className='flex flex-col gap-2'>
-                                        <p className='text-[16px] font-semibold text-[#1e293be3]'>Đối tượng hướng tới</p>
-                                        <div dangerouslySetInnerHTML={{ __html: detailCourse.object }} />
-                                    </div>
-                                    :
-
-                                    <div className='flex flex-col gap-2'>
                                         <p className='text-[16px] font-semibold text-[#1e293be3]'>Kêt quả đạt được</p>
                                         <div dangerouslySetInnerHTML={{ __html: detailCourse.result }} />
                                     </div>
+
+                                    :
+                                    <div className='flex flex-col gap-2'>
+                                        <p className='text-[16px] font-semibold text-[#1e293be3]'>Đối tượng hướng tới</p>
+                                        <div dangerouslySetInnerHTML={{ __html: detailCourse.object }} />
+                                    </div>
+
                     }
                 </Col>
                 <Col span={10} className='flex flex-col gap-2'>

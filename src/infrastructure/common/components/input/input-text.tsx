@@ -66,6 +66,8 @@ const InputTextCommon = (props: Props) => {
             onBlur(true);
         }
     }, [submittedTime]);
+    console.log('validate', validate);
+
     return (
         <div>
             <div className='mb-4 input-common'>
