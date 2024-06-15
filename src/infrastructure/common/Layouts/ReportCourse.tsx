@@ -23,6 +23,8 @@ type Props = {
 const ReportCourseModal = (props: Props) => {
   const { handleCancel, visible, loading, setLoading } = props;
   const [dataReport, setDataReport] = useState<Array<any>>([]);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [totalCost, setTotalCost] = useState<number>(0);
 
   const token = isTokenStoraged();
 
@@ -32,6 +34,7 @@ const ReportCourseModal = (props: Props) => {
         await teacherService.reportTeacher(setLoading).then((response) => {
           if (response) {
             setDataReport(response.course_amounts);
+            setTotalAmount(response.totalCourse);
           }
         });
       } catch (error) {
@@ -45,6 +48,12 @@ const ReportCourseModal = (props: Props) => {
       getMyCourseAsync().then(() => {});
     }
   }, [token]);
+  useEffect(() => {
+    const totalCost = dataReport.reduce((total, item) => {
+      return total + Number(item.totalAmount);
+    }, 0);
+    setTotalCost(totalCost)
+  }, [dataReport]);
   return (
     <Modal
       key={"f-0"}
@@ -61,12 +70,22 @@ const ReportCourseModal = (props: Props) => {
             Báo cáo doanh số khóa học
           </div>
         </div>
-        <div className="bg-[#FFF] px-3 py-5 rounded-[4px] flex gap-1 border-l-4 border-[#0d9e6d]">
-          <div className="text-[18px] text-[#1e293bb3] font-semibold uppercase">
-            Tổng doanh số:
+        <div className="bg-[#FFF] px-3 py-5 rounded-[4px] flex flex-col gap-1 border-l-4 border-[#0d9e6d]">
+          <div className="flex gap-1">
+            <div className="text-[18px] text-[#1e293bb3] font-semibold uppercase">
+              Tổng doanh số:
+            </div>
+            <div className="text-[18px] text-[#d63939] font-semibold">
+              {formatCurrencyVND(String(totalCost))}
+            </div>
           </div>
-          <div className="text-[18px] text-[#d63939] font-semibold">
-            {formatCurrencyVND(String("1900999"))}
+          <div className="flex gap-1">
+            <div className="text-[18px] text-[#1e293bb3] font-semibold uppercase">
+              Tổng số khóa học đã bán:
+            </div>
+            <div className="text-[18px] text-[#d63939] font-semibold">
+              {totalAmount}
+            </div>
           </div>
         </div>
         <div className="bg-[#FFF] px-3 py-5 rounded-[4px]">
@@ -95,7 +114,12 @@ const ReportCourseModal = (props: Props) => {
                     </div>
                     <div className="flex gap-1 items-center text-[13px] font-semibold text-[#1e293bb3] ">
                       <p>Đã bán được:</p>
-                      <p> khóa </p>
+                      <p>
+                        {(
+                          Number(it.totalAmount) / Number(it.course?.cost)
+                        ).toFixed(0)}{" "}
+                        khóa{" "}
+                      </p>
                     </div>
                     <div className="flex gap-1 items-center text-[14px] font-semibold text-[#d63939] ">
                       <p>Doanh thu khóa học:</p>
