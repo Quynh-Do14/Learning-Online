@@ -1,16 +1,15 @@
 import { Col, Row } from 'antd'
-import React, { useEffect, useState } from 'react'
 import { configImageURL, formatCurrencyVND } from '../../../../infrastructure/helper/helper';
 import { ButtonCommon } from '../../../../infrastructure/common/components/button/button-common';
-import { MyCourseState } from '../../../../core/atoms/myCourse/myCourseState';
-import { useRecoilValue } from 'recoil';
-import { ProfileState } from '../../../../core/atoms/profile/profileState';
 type Props = {
     videoURL: string,
     detailCourse: any,
     detailTeacher: any,
     openModalBuyCourse: Function,
-    checkMyCourse: boolean
+    checkMyCourse: boolean,
+    isAdmin: boolean,
+    isTeacher: boolean,
+
 }
 const InfoCourse = (props: Props) => {
     const {
@@ -18,22 +17,11 @@ const InfoCourse = (props: Props) => {
         detailCourse,
         detailTeacher,
         openModalBuyCourse,
-        checkMyCourse
-    } = props;
-    const [isAdmin, setIsAdmin] = useState<boolean>(false);
-    const [isTeacher, setIsTeacher] = useState<boolean>(false);
-    const dataProfile = useRecoilValue(ProfileState).user;
+        checkMyCourse,
+        isAdmin,
+        isTeacher
 
-    useEffect(() => {
-        dataProfile?.roles?.map((it: any) => {
-            if (it.name == "ADMIN") {
-                setIsAdmin(true)
-            }
-            else if (it.name == "TEACHER") {
-                setIsTeacher(true)
-            }
-        })
-    }, [dataProfile]);
+    } = props;
 
     return (
         <Row gutter={[25, 20]}>

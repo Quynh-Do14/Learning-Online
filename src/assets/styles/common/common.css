@@ -130,6 +130,37 @@
     border: none;
 }
 
+.detail-lesson .lesson-detail {
+    position: relative;
+}
+
+.detail-lesson .lesson-detail .side-tab {
+    opacity: 0;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
+    transition: transform 0.3s ease, opacity 0s ease;
+}
+
+.detail-lesson .lesson-detail .side-tab.show {
+    opacity: 1;
+    position: relative;
+    height: 100%;
+    top: 0;
+    transform: translateX(0);
+}
+
+.detail-lesson .lesson-detail .icon-rotation {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+.detail-lesson .lesson-detail .icon-rotation.show {
+    transform: rotate(90deg);
+}
+
 @media only screen and (min-width: 1600px) {
     .margin-teacher {
         margin-left: -30px;

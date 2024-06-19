@@ -19,6 +19,7 @@ import LessonCourse from './components/lesson'
 import CommentCourse from './components/comment'
 import { useRecoilValue } from 'recoil'
 import { MyCourseState } from '../../../core/atoms/myCourse/myCourseState'
+import { ProfileState } from '../../../core/atoms/profile/profileState'
 
 const DetailCourse = () => {
     const [tab, setTab] = useState(1);
@@ -37,12 +38,26 @@ const DetailCourse = () => {
 
     const [videoURL, setVideoURL] = useState<string>("");
     const [isOpenModalBuyCourse, setIsOpenModalBuyCourse] = useState<boolean>(false);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [isTeacher, setIsTeacher] = useState<boolean>(false);
+    const dataProfile = useRecoilValue(ProfileState).user;
 
     const param = useParams();
     const token = isTokenStoraged();
     const myCourse = useRecoilValue(MyCourseState).data;
 
     const [checkMyCourse, setCheckMyCourse] = useState<boolean>(false);
+
+    useEffect(() => {
+        dataProfile?.roles?.map((it: any) => {
+            if (it.name == "ADMIN") {
+                setIsAdmin(true)
+            }
+            else if (it.name == "TEACHER") {
+                setIsTeacher(true)
+            }
+        })
+    }, [dataProfile]);
 
     useEffect(() => {
         myCourse.filter(it => {
@@ -153,7 +168,7 @@ const DetailCourse = () => {
 
     return (
         <LayoutClient>
-            <div className='flex flex-col gap-6 bg-[#FFF] px-4 py-5'>
+            <div className='detail-lesson flex flex-col gap-6 bg-[#FFF] px-4 py-5'>
                 <BreadcrumbCommon
                     title={detailCourse.name}
                     breadcrumb={'Trang chủ'}
@@ -165,6 +180,8 @@ const DetailCourse = () => {
                     detailTeacher={detailTeacher}
                     openModalBuyCourse={openModalBuyCourse}
                     checkMyCourse={checkMyCourse}
+                    isAdmin={isAdmin}
+                    isTeacher={isTeacher}
                 />
                 <Row gutter={[25, 10]} className='border-b-[1px] border-b-[#1e293b54]'>
                     {
@@ -187,6 +204,10 @@ const DetailCourse = () => {
 
                 <LessonCourse
                     listLesson={listLesson}
+                    checkMyCourse={checkMyCourse}
+                    setIsOpenModalBuyCourse={setIsOpenModalBuyCourse}
+                    isAdmin={isAdmin}
+                    isTeacher={isTeacher}
                 />
                 <CommentCourse
                     commentChange={commentChange}

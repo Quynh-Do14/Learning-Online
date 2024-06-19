@@ -3,13 +3,17 @@ import LayoutClient from '../../../infrastructure/common/Layouts/Client-Layout'
 import { Col, Row } from 'antd'
 import lessonService from '../../../infrastructure/repositories/lesson/service/lesson.service';
 import { configImageURL } from '../../../infrastructure/helper/helper';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CommentLesson from './components/comment';
 import commentService from '../../../infrastructure/repositories/comment/service/comment.service';
 import Constants from '../../../core/common/constants';
 import DescriptionLesson from './components/description';
 import { isTokenStoraged } from '../../../infrastructure/utils/storage';
 import { FullPageLoading } from '../../../infrastructure/common/components/controls/loading';
+import { useRecoilValue } from 'recoil';
+import { ProfileState } from '../../../core/atoms/profile/profileState';
+import { ROUTE_PATH } from '../../../core/common/appRouter';
+import { MyCourseState } from '../../../core/atoms/myCourse/myCourseState';
 
 const DetailLessonPage = () => {
     const [detailLesson, setDetailLesson] = useState<any>({});
@@ -21,8 +25,13 @@ const DetailLessonPage = () => {
     const [tab, setTab] = useState(1);
     const [videoURL, setVideoURL] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+
+    const dataProfile = useRecoilValue(ProfileState).user;
+    const myCourse = useRecoilValue(MyCourseState).data;
+
     const param = useParams();
     const token = isTokenStoraged();
+    const navigate = useNavigate();
 
     const onGetLessonByIdAsync = async () => {
         try {
@@ -97,6 +106,30 @@ const DetailLessonPage = () => {
         }
     };
 
+    useEffect(() => {
+        if (dataProfile) {
+            dataProfile?.roles?.map((it: any) => {
+                if (it.name == "ADMIN" || it.name == "TEACHER") {
+                    return;
+                }
+                else (
+                    navigate(ROUTE_PATH.LIST_COURSE)
+                )
+            })
+        }
+        else if (detailLesson?.course) {
+            const condition = myCourse.filter(it => it.course?.id === detailLesson?.course?.id)
+            console.log("condition", condition);
+
+            if (condition.length > 0 || detailLesson.publicDocument) {
+                return
+            }
+            else if (condition.length == 0) {
+                navigate(ROUTE_PATH.LIST_COURSE)
+            }
+
+        }
+    }, [myCourse, detailLesson, dataProfile])
 
     return (
         <LayoutClient>
