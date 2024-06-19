@@ -16,7 +16,12 @@ export function validateInputPassword(val: string, oldVal = "") {
 
 
 export function validateName(val: string) {
-    let reg = /[a-zA-Z0-9]{3,}$/;
+    let reg = /[a-zA-Z0-9]{6,}$/;
+    return val && reg.test(val);
+}
+
+export function validatePassword6Word(val: string) {
+    let reg = /[a-zA-Z0-9]{6,}$/;
     return val && reg.test(val);
 }
 

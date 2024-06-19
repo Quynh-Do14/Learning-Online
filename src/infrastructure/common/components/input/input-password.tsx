@@ -3,6 +3,7 @@ import { Input } from 'antd';
 import "../../../../assets/styles/components/input.css"
 import { MessageError } from '../controls/MessageError';
 import { validateFields } from '../../../helper/helper';
+import { validatePassword6Word } from '../../../helper/validate';
 type Props = {
     label: string,
     attribute: string,
@@ -40,7 +41,8 @@ const InputPasswordCommon = (props: Props) => {
     const onBlur = (isImplicitChange = false) => {
         let checkValidate
         if (isRequired) {
-            validateFields(isImplicitChange, attribute, !value, setValidate, validate, !value ? `Vui lòng nhập ${labelLower}` : "");
+            checkValidate = validatePassword6Word(value);
+            validateFields(isImplicitChange, attribute, !checkValidate, setValidate, validate, !checkValidate ? value ? `Vui lòng nhập ${labelLower} với hơn 6 kí tự` : `Vui lòng nhập ${labelLower}` : "");
         }
     };
 

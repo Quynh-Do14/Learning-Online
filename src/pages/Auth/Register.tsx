@@ -50,7 +50,7 @@ const RegisterModal = (props: Props) => {
         setIsRegisterClick(false);
     };
 
-    const onLoginAsync = async () => {
+    const onRegisterAsync = async () => {
         await setSubmittedTime(new Date());
         if (isValidData()) {
             try {
@@ -60,7 +60,6 @@ const RegisterModal = (props: Props) => {
                         email: dataLogin.email,
                         name: dataLogin.name,
                         password: dataLogin.password,
-                        roles: ["user"]
                     },
                     setLoading
                 ).then((response) => {
@@ -146,7 +145,7 @@ const RegisterModal = (props: Props) => {
                         />
                     </Col>
                     <Col span={24}>
-                        <button className="w-full bg-[#ed7100] hover:bg-[#53ffff] text-white hover:text-[#1d1d1d] transition duration-300 p-2 rounded-[4px] text-[16px] font-semibold " onClick={onLoginAsync}>Đăng nhập</button>
+                        <button className="w-full bg-[#ed7100] hover:bg-[#53ffff] text-white hover:text-[#1d1d1d] transition duration-300 p-2 rounded-[4px] text-[16px] font-semibold " onClick={onRegisterAsync}>Đăng nhập</button>
                     </Col>
                 </Row>
                 <div className="flex justify-between gap-[10rem] py-2">

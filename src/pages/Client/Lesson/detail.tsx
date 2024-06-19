@@ -25,6 +25,8 @@ const DetailLessonPage = () => {
     const [tab, setTab] = useState(1);
     const [videoURL, setVideoURL] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [isTeacher, setIsTeacher] = useState<boolean>(false);
 
     const dataProfile = useRecoilValue(ProfileState).user;
     const myCourse = useRecoilValue(MyCourseState).data;
@@ -107,21 +109,20 @@ const DetailLessonPage = () => {
     };
 
     useEffect(() => {
-        if (dataProfile) {
-            dataProfile?.roles?.map((it: any) => {
-                if (it.name == "ADMIN" || it.name == "TEACHER") {
-                    return;
-                }
-                else (
-                    navigate(ROUTE_PATH.LIST_COURSE)
-                )
-            })
-        }
-        else if (detailLesson?.course) {
-            const condition = myCourse.filter(it => it.course?.id === detailLesson?.course?.id)
-            console.log("condition", condition);
+        dataProfile?.roles?.map((it: any) => {
+            if (it.name == "ADMIN") {
+                setIsAdmin(true)
+            }
+            else if (it.name == "TEACHER") {
+                setIsTeacher(true)
+            }
+        })
+    }, [dataProfile]);
 
-            if (condition.length > 0 || detailLesson.publicDocument) {
+    useEffect(() => {
+        if (detailLesson?.course) {
+            const condition = myCourse.filter(it => it.course?.id === detailLesson?.course?.id)
+            if (condition.length > 0 || detailLesson.publicDocument || isAdmin || isTeacher) {
                 return
             }
             else if (condition.length == 0) {
